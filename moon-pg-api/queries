@@ -1,2 +1,0 @@
-﻿ALTER TABLE users
-ALTER datejoined SET DEFAULT now();
