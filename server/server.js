@@ -5,16 +5,11 @@ const PORT = 3000;
 /* == initialization == */
 const app = require('./app');
 
-//app.use(express.static('./static/'));
-
 /* Request handlers */
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
-//const utilRoutes = require('./routes/utils');
 
-//app.use('/',utilRoutes);
 app.use('/api', authRoutes,userRoutes);
-
 
 app.get('/api/secret',(req,res)=>{
   console.log("GET : /secret",req.isAuthenticated());
@@ -26,6 +21,7 @@ app.get('/api/secret',(req,res)=>{
     res.redirect('/');
   }
 });
+
 app.use(express.static(path.resolve(__dirname, '..','public')));// Serve static assets
 
 app.get('*', (req, res,next) => {

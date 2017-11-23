@@ -2,11 +2,8 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import Auth from '../modules/Auth';
 import FlatButton from 'material-ui/FlatButton';
-import IconMenu from 'material-ui/IconMenu';
-import IconButton from 'material-ui/IconButton';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import MenuItem from 'material-ui/MenuItem';
 import AppBar from 'material-ui/AppBar';
+import AvatarMenu from './AvatarMenu';
 class Base extends React.Component{
   constructor(props){
     super(props);
@@ -16,9 +13,10 @@ class Base extends React.Component{
     return(
       <div>
         <AppBar
+          style={{paddingLeft: '30px',paddingRight: '30px'}}
           title={<Link to='/'>MooN</Link>}
           onTitleTouchTap={()=>{  }}
-          iconElementRight={Auth.isUserAuthenticated() ? <LoggedIn /> : <LoggedOut />}
+          iconElementRight={Auth.isUserAuthenticated() ? <AvatarMenu user={Auth.getToken()}/> : <LoggedOut />}
           iconElementLeft={<div/>}
         />
         {this.props.child}
@@ -27,19 +25,11 @@ class Base extends React.Component{
   }
 }
 const LoggedOut = () =>(
-  <div>
-    <Link to="/login"><FlatButton label='Login'/></Link>
-    <Link to="/signup"><FlatButton label='Sign Up'/></Link>
+  <div style={{paddingTop:'5px'}}>
+    <Link to="/login"><FlatButton label='Login' style={{color:'white'}}/></Link>
+    <Link to="/signup"><FlatButton label='Sign Up' style={{color:'white'}}/></Link>
   </div>
 );
-const LoggedIn = () => (
-    <IconMenu iconButtonElement={
-      <IconButton><MoreVertIcon /></IconButton>
-  }>
-      <Link to="/upload"><MenuItem primaryText="Upload"/></Link>
-      <MenuItem primaryText="Help"/>
-      <Link to="/logout"><MenuItem primaryText="Sign out"/></Link>
-    </IconMenu>
-);
+
 
 export default Base;

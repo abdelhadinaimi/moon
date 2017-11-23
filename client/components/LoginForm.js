@@ -32,6 +32,4 @@ const LoginForm = ({
     </form>
   </Card>
 );
-
-
 export default LoginForm;
