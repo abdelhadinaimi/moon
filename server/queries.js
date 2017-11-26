@@ -1,6 +1,5 @@
-var pgp = require('pg-promise')();
-var bcrypt = require('bcrypt');
-
+const pgp = require('pg-promise')();
+const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const cn = {
     host: 'localhost',
@@ -30,6 +29,7 @@ function addUser(user){
     return db.one('INSERT INTO \"Users\" (username,email,hash) VALUES($1,$2,$3) RETURNING username',[user.username,user.email,hash])
       .then(data => {
         console.log("addUser","INSERTED SUCCESSFULLY");
+        db.none('INSERT INTO profile (username) VALUES($1)',user);//Create Profile
         return data.username;
       })
       .catch(err => {

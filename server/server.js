@@ -8,8 +8,8 @@ const app = require('./app');
 /* Request handlers */
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
-
-app.use('/api', authRoutes,userRoutes);
+const mediaRoutes = require('./routes/media');
+app.use('/api', authRoutes,userRoutes,mediaRoutes);
 
 app.get('/api/secret',(req,res)=>{
   console.log("GET : /secret",req.isAuthenticated());

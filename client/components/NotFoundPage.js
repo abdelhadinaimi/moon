@@ -3,7 +3,7 @@ import { Card, CardText } from 'material-ui/Card';
 
 
 const NotFoundPage = () => (
-    <Card className="container">
+    <Card className="container text-center">
       <h2 className="card-heading">Page not found !</h2>
 
       <CardText>Sorry ! There is nothing on this page.</CardText>

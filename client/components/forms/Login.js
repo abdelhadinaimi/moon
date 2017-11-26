@@ -10,7 +10,7 @@ const LoginForm = ({
   errors,
   user
 }) => (
-  <Card className="container">
+  <Card className="container text-center">
     <form action="/" onSubmit={onSubmit}>
       <h2 className="card-heading">Login</h2>
 

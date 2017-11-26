@@ -2,15 +2,16 @@ import React from 'react';
 import {BrowserRouter as Router,Route,Link,Redirect,Switch} from 'react-router-dom';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import Auth from './modules/Auth';
 import Home from './components/Home';
 import Base from './components/Base';
 import SignUpPage from './containers/SignUpPage';
 import LoginPage from './containers/LoginPage';
 import LogoutPage from './containers/LogoutPage';
-import NotFoundPage from './containers/NotFoundPage';
-import UploadForm from './components/UploadForm';
+import NotFoundPage from './components/NotFoundPage';
 import ProfilePage from './containers/ProfilePage';
+import PrivateRoute from './components/utils/PrivateRoute.js';
+import EditProfileForm from './components/forms/EditProfile';
+import UploadForm from './components/forms/Upload';
 import './styles/App.css';
 
 class App extends React.Component {
@@ -37,17 +38,5 @@ class App extends React.Component {
   }
 }
 
-const PrivateRoute = ({ component: Component,path}) => (
-  <Route path={path} render={props => (
-    Auth.isUserAuthenticated() ? (
-      <Component {...props}/>
-    ) : (
-      <Redirect to={{
-        pathname: '/login',
-        from: props.location,
-        message:'You need to login to view this pages.'
-      }}/>
-    )
-  )}/>
-)
+
 export default App;

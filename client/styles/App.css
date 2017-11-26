@@ -38,7 +38,6 @@ a {
 
 .container {
   margin: 0 auto;
-  text-align: center;
   width: 700px;
 }
 
@@ -58,4 +57,29 @@ a {
 .success-message {
   padding: 0 16px;
   color: green;
+}
+
+.profile-container {
+  padding : 16px;
+  box-sizing: border-box;
+  position: relative;
+  white-space: nowrap;
+}
+
+.profile-info-section {
+  display: inline-block;
+  vertical-align: top;
+  white-space: normal;
+  padding-right: 90px;
+}
+
+.profile-info-title {
+  color: rgba(0, 0, 0, 0.87);
+  display: block;
+  font-size: 15px;
+}
+
+.profile-edit-button {
+  float: right;
+  top: -80px;
 }

@@ -19,7 +19,7 @@ class AvatarMenu extends React.Component{
     this.setState({open: !this.state.open});
   }
   render(){
-    const user = this.props.user
+    const user = Utils.capitalizeFirstLetter(this.props.user);
     return(
       <IconMenu
         onClick={this.handleClick}
@@ -29,9 +29,9 @@ class AvatarMenu extends React.Component{
         anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
         targetOrigin={{horizontal: 'right', vertical: 'bottom'}}
         iconButtonElement={
-          <Avatar src="http://www.material-ui.com/images/uxceo-128.jpg" size={50} style={{cursor:'pointer'}}/>
+          <Avatar size={50} style={{cursor:'pointer'}}>{user[0]}</Avatar>
       }>
-        <MenuItemLink to={'/profile/'+user} primaryText={Utils.capitalizeFirstLetter(user)}/>
+        <MenuItemLink to={'/profile/'+this.props.user} primaryText={user}/>
         <MenuItemLink to='/upload' primaryText="Upload" on/>
         <Divider/>
         <MenuItemLink to='/logout' primaryText="Sign out"/>

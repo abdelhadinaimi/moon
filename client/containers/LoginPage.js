@@ -1,5 +1,5 @@
 import React from 'react';
-import LoginForm from '../components/LoginForm.js';
+import LoginForm from '../components/forms/Login.js';
 import { Redirect } from 'react-router-dom';
 import Auth from '../modules/Auth';
 class LoginPage extends React.Component {

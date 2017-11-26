@@ -4,6 +4,7 @@ import Auth from '../modules/Auth';
 import FlatButton from 'material-ui/FlatButton';
 import AppBar from 'material-ui/AppBar';
 import AvatarMenu from './AvatarMenu';
+
 class Base extends React.Component{
   constructor(props){
     super(props);

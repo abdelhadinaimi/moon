@@ -11,7 +11,7 @@ class SignUpForm extends React.Component{
   render(){
     const {onSubmit,onChange,errors,user,message} = this.props;
     return(
-      <Card className="container">
+      <Card className="container text-center">
         <form action="/" onSubmit={onSubmit}>
           <h2 className="card-heading">Sign Up</h2>
           {message && <p className="success-message">{message}</p>}

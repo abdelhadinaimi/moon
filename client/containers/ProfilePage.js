@@ -1,25 +1,29 @@
 import React from 'react';
 import ProfileComponent from '../components/ProfileComponent';
-import { Redirect } from 'react-router-dom';
-
+import EditProfilePage from './EditProfilePage';
+import { Redirect,Route } from 'react-router-dom';
+import PrivateRoute from '../components/utils/PrivateRoute';
+import Utils from '../modules/Utils';
 class ProfilePage extends React.Component{
 
   constructor(props){
     super(props);
     this.state={
       redirect : false,
-      info: {}
+      info: {},
+      fetched : false
     };
-    this.getUserInfo(props.match.params.user);
+    this.getUserInfo(props.match.params.user); //When page is accessed server-side
+  }
+
+  componentWillUpdate(nextProps, nextState){
+    if(this.state.info.username !== nextProps.match.params.user){
+      this.getUserInfo(nextProps.match.params.user);
+    }
   }
 
   getUserInfo(username){
-    let request = new Request('http://localhost:3000/api/user/'+username,{
-      method: 'POST',
-      headers: new Headers({'Content-Type': 'application/json'})
-    });
-    fetch(request)
-    .then(res=>res.json())
+    Utils.getUserInfo(username)
     .then(data =>{
       if(data.error)
         this.setState({redirect : true});
@@ -28,13 +32,20 @@ class ProfilePage extends React.Component{
       }
     });
   }
-
   render(){
     return(
       this.state.redirect ? <Redirect to='/notfound'/> :
-      <ProfileComponent info={this.state.info}/>
+      <div>
+        <Route exact path={"/profile/"+this.state.info.username+"/"} render={()=>(<ProfileComponent info={this.state.info}/>)}/>
+        <Route path={"/profile/"+this.state.info.username+"/edit"} render={()=>(<EditProfilePage info={this.state.info}/>)}/>
+      </div>
+
     )
   }
 }
 
+/*
+this.state.redirect ? <Redirect to='/notfound'/> :
+<ProfileComponent info={this.state.info}/>
+*/
 export default ProfilePage;
