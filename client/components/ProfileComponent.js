@@ -7,8 +7,16 @@ import ActionEdit from 'material-ui/svg-icons/image/edit';
 import Utils from '../modules/Utils';
 import EditProfile from '../components/forms/EditProfile';
 import {Link} from 'react-router-dom';
+//259 46
 const ProfileInfoItem = ({title,content}) => (
-    <span style={{padding:'10px'}} className="profile-info-title"><b>{title}</b>{" : " + content }<br/></span>
+  <tr className="profile-info-title" style={{width:'259px',height:'46px'}}>
+    <td>
+      <b>{title}</b>{" : " }
+    </td>
+    <td style={{width: '70%'}}>
+    {content}
+    </td>
+  </tr>
 );
 //<CardHeader title="URL Avatar" subtitle="Subtitle" avatar={<Avatar src="http://www.material-ui.com/images/uxceo-128.jpg" size={90}/>}/>
 const UserComponent = ({info}) => {
@@ -24,14 +32,18 @@ const UserComponent = ({info}) => {
         }
         <div className="profile-container">
           <Avatar size={90} style={{marginRight:'16px'}}>{info.username ? info.username[0] : ""}</Avatar>
-          <div className="profile-info-section">
-            <ProfileInfoItem title="Name" content={info.name + " " + info.surname}/>
-            <ProfileInfoItem title="Age" content={info.age}/>
-          </div>
-          <div className="profile-info-section">
+          <table className="profile-info-section">
+            <tbody>
+              <ProfileInfoItem title="Name" content={info.name}/>
+              <ProfileInfoItem title="Age" content={Utils.calculateAge(info.birthday)}/>
+            </tbody>
+          </table>
+          <table className="profile-info-section">
+            <tbody>
               <ProfileInfoItem title="Country" content={info.country}/>
-              <ProfileInfoItem title="Gender" content={info.gender}/>
-          </div>
+              <ProfileInfoItem title="Gender" content={info.gender == 0 ? "Male" : "Female"}/>
+            </tbody>
+          </table>
         </div>
       </Card>
     )

@@ -10,12 +10,13 @@ class ProfilePage extends React.Component{
     super(props);
     this.state={
       redirect : false,
-      info: {},
-      fetched : false
+      info: {}
     };
     this.getUserInfo(props.match.params.user); //When page is accessed server-side
   }
 
+  /*if the current page's username is not the same as the last page
+    This is for when the user is in a profile page and switches to his own profile (client-side)*/
   componentWillUpdate(nextProps, nextState){
     if(this.state.info.username !== nextProps.match.params.user){
       this.getUserInfo(nextProps.match.params.user);

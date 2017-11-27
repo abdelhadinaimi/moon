@@ -1,4 +1,4 @@
-body {
+tbody {
   margin: 0;
   font-size: 16px;
 }
@@ -38,7 +38,7 @@ a {
 
 .container {
   margin: 0 auto;
-  width: 700px;
+  width: 800px;
 }
 
 .card-heading {
@@ -70,7 +70,7 @@ a {
   display: inline-block;
   vertical-align: top;
   white-space: normal;
-  padding-right: 90px;
+  padding-right: 5%;
 }
 
 .profile-info-title {
@@ -82,4 +82,17 @@ a {
 .profile-edit-button {
   float: right;
   top: -80px;
+}
+
+.autocomplete {
+  width: 100% !important;
+}
+
+.profile-td {
+  width: 80px;
+  height: 42px;
+}
+
+.data-picker div{
+  width: 100% !important;
 }

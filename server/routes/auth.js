@@ -142,9 +142,12 @@ router.post('/login',(req,res)=>{
 router.post('/logout',(req,res)=>{
   req.logout();
   req.session.destroy();
-  res.status(200);  
+  res.status(200);
 });
 
+router.post('/isAuthenticated',(req,res)=>{
+    res.json({connected:req.isAuthenticated()});
+});
 passport.use('local-login',localLogin);
 
 passport.serializeUser(function(username, done) {
