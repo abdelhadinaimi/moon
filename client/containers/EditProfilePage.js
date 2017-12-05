@@ -2,14 +2,15 @@ import React from 'react';
 import EditProfile from '../components/forms/EditProfile';
 import Utils from '../modules/Utils';
 import { Redirect } from 'react-router-dom';
-
+import * as mime from 'react-native-mime-types';
 class EditProfilePage extends React.Component {
   constructor(props){
     super(props);
     this.state={
       redirect : !props.info.isOwner,
       info: props.info,
-      errors: {}
+      errors: {},
+      message: ""
     };
     if(!this.state.redirect){
       this.getCountries();
@@ -22,36 +23,53 @@ class EditProfilePage extends React.Component {
     const info = this.state.info;
     info[field] = v;
     this.forceUpdate();
-    console.log(this.state.info);
   }
   processForm(e){
     e.preventDefault(); // prevent default action. in this case, action is the form submission event
-    const {birthday,country,gender,name,username} = this.state.info;
-    let data = {
-      birthday:birthday,
-      country:country,
-      gender:gender,
-      name:name
-    };
+    const {birthday,country,gender,name,username,interests,about,photo} = this.state.info;
+    //let data = { birthday,country, gender,name,interests,about,photo };
+    let data = new FormData();
+    if(photo && this.validatePhoto(photo[0])){
+      data.append('photo', photo[0]);
+    }
+    else{
+      const errors = this.state.errors;
+      errors.message = "Please choose a valide image";
+      this.forceUpdate();
+      return;
+    }
+    data.append('birthday',birthday);
+    data.append('country',country);
+    data.append('gender',gender);
+    data.append('name',name);
+    data.append('username',username);
+    data.append('interests',interests);
+    data.append('about',about);
     let request = new Request('http://localhost:3000/api/user/'+username+'/edit',{
       method: 'POST',
-      headers: new Headers({'Content-Type': 'application/json'}),
-      body: JSON.stringify(data)
+      body:data
     });
     fetch(request,{credentials: 'include'})
     .then(res => res.json())
     .then(data =>{
       if(data.success){
         this.setState({
+          message:data.message,
           errors: {}
-        })
+        });
+        setTimeout(()=>this.setState({redirect:true}),1000);
       }
       else{
         this.setState({
+          message: "",
           errors: data.errors
-        })
+        });
       }
     });
+  }
+  validatePhoto(photo){
+    const type = mime.extension(photo.type)
+    return (type == 'png' || type == 'jpg' || type == 'jpeg' || type == 'bmp');
   }
   getCountries(){
     let request = new Request('http://localhost:3000/api/countries',{
@@ -73,7 +91,8 @@ class EditProfilePage extends React.Component {
         info={this.state.info}
         onChange={this.onChange}
         onSubmit={this.processForm}
-        errors={this.state.errors}/>
+        errors={this.state.errors}
+        message={this.state.message}/>
     )
   }
 }

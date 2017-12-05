@@ -7,6 +7,7 @@ import ActionEdit from 'material-ui/svg-icons/image/edit';
 import Utils from '../modules/Utils';
 import EditProfile from '../components/forms/EditProfile';
 import {Link} from 'react-router-dom';
+import ImageLetter from './utils/ImageLetter';
 //259 46
 const ProfileInfoItem = ({title,content}) => (
   <tr className="profile-info-title" style={{width:'259px',height:'46px'}}>
@@ -20,6 +21,9 @@ const ProfileInfoItem = ({title,content}) => (
 );
 //<CardHeader title="URL Avatar" subtitle="Subtitle" avatar={<Avatar src="http://www.material-ui.com/images/uxceo-128.jpg" size={90}/>}/>
 const UserComponent = ({info}) => {
+    var gender = 'Undefined';
+    if(info.gender == 0) gender = "Male";
+    else if (info.gender == 1) gender = "Female";
     return(
       <Card className="container">
         <h2 className="card-heading text-center">{info.username}</h2>
@@ -31,7 +35,9 @@ const UserComponent = ({info}) => {
           </IconButton>
         }
         <div className="profile-container">
-          <Avatar size={90} style={{marginRight:'16px'}}>{info.username ? info.username[0] : ""}</Avatar>
+          <Avatar size={90} style={{marginRight:'16px'}}>
+            <ImageLetter src={"http://localhost:3000/api/media/profile/"+info.username} letter={info ? info.username[0] : ""}/>
+          </Avatar>
           <table className="profile-info-section">
             <tbody>
               <ProfileInfoItem title="Name" content={info.name}/>
@@ -41,9 +47,17 @@ const UserComponent = ({info}) => {
           <table className="profile-info-section">
             <tbody>
               <ProfileInfoItem title="Country" content={info.country}/>
-              <ProfileInfoItem title="Gender" content={info.gender == 0 ? "Male" : "Female"}/>
+              <ProfileInfoItem title="Gender" content={gender}/>
             </tbody>
           </table>
+          <CardTitle title="About"/>
+          <CardText>
+            {info.about || "Nothing here yet."}
+          </CardText>
+          <CardTitle title="Interests"/>
+          <CardText>
+            {info.interests || "Nothing here yet."}
+          </CardText>
         </div>
       </Card>
     )

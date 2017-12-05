@@ -1,19 +1,46 @@
 const express = require('express');
 const db = require('../queries');
 const validator = require('validator');
+const multer  = require('multer');
 const countries = require('../data/countries');
-const router = new express.Router();
+const path = require('path');
 
-function getUserInfo(user){
-  return db.checkUser(user)
-    .then(data=> {
-      if(data.length == 0){
+const router = new express.Router();
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.resolve(__dirname,'..','..','uploads','profile'));
+  },
+  filename: function (req, file, cb) {
+    cb(null,req.user);//+path.extname(file.originalname)
+  }
+});
+
+var upload = multer({ storage: storage });
+
+function getUserInfo(username){
+  let data = {};
+  return db.getUser(username)
+    .then(user=> {
+
+      if(!user || user.length == 0){
         return {};
       }
-      delete data[0].hash;
-      delete data[0].isAdmin;
-      delete data[0].email;
-      return data[0];
+      user = user[0];
+      data.birthday = user.birthday;
+      data.country = user.country;
+      data.gender = user.gender;
+      data.name = user.name;
+      data.username = user.username;
+      return db.getProfile(username)
+      .then(profile => {
+        if(!profile || profile.length == 0){
+          return {};
+        }
+        profile = profile[0];
+        data.interests = profile.interests;
+        data.about = profile.about;
+        return data;
+      });
     })
 }
 
@@ -34,18 +61,18 @@ router.post('/user/:id', (req, res) => {
   1- When user enters this page, check if he is the owner DONE
   2- if a user posts to this page, check if he is the owner DONE
   3- validate data DONE
-  4- upload image, if it is provided
-  5- Insert to the database
-  6- redirect the user to his profile
+  4- upload image, if it is provided DONE
+  5- Insert to the database DONE
 */
 
-router.post('/user/:id/edit',(req,res)=> {
+router.post('/user/:id/edit',upload.single('photo'),(req,res)=> {
     if(req.isAuthenticated() && req.user === req.params.id){
       let validationResult = validateEditInput(req.body);
       if(!validationResult.success){
         return res.status(400).json(validationResult);
       }
-      return res.status(200).json({success:true});
+      db.updateUser(req.body);
+      return res.status(200).json({success:true,message:"Profile Saved"});
     }else{
       return res.json({
         success: false,
@@ -73,15 +100,13 @@ function validateEditInput(payload){
     isFormValid = false;
     errors.country = 'Please choose a country from the list.';
   }
-  if (!payload || typeof payload.birthday !== 'string' || payload.birthday.trim().length === 0) {
+  if (!payload || payload.birthday === 'null') {
     isFormValid = false;
     errors.birthday = 'Please provide your birthday.';
   }
-  if (!payload || typeof payload.gender !== 'number') {
-    isFormValid = false;
-    errors.gender = 'Please provide your gender.';
+  if (!isFormValid) {
+    errors.message = 'Check the form for errors.';
   }
-
   return {
     success: isFormValid,
     errors

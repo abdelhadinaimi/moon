@@ -9,7 +9,7 @@ function checkUserEmail(payload){
     const errors = {};
     let success = true;
     var promises = [
-      db.checkUser(payload.username)
+      db.getUser(payload.username)
       .then(data => {
         if(data.length !== 0){
           errors.username = 'Username already taken.';
@@ -146,7 +146,7 @@ router.post('/logout',(req,res)=>{
 });
 
 router.post('/isAuthenticated',(req,res)=>{
-    res.json({connected:req.isAuthenticated()});
+    res.json({connected:req.isAuthenticated(),user:req.user});
 });
 passport.use('local-login',localLogin);
 

@@ -13,13 +13,13 @@ class DatePicker extends React.Component {
   onChange(event, date) {
     const { onDataChange, name } = this.props;
     const e = { target: { name: name}};
-    onDataChange(e, date.toISOString());
+    onDataChange(e, date ? date.toISOString() : undefined);
   }
   convertToMillis(dateString) {
     return dateString.valueOf();
   }
   convertToDateString(dateMillis) {
-    if (dateMillis !== null && typeof yourVariable === 'object') {
+    if (dateMillis !== null && typeof dateMillis === 'object') {
       return dateMillis;
     }
     return new Date(dateMillis);
@@ -27,7 +27,8 @@ class DatePicker extends React.Component {
 
   render() {
     const { name,style,textFieldStyle,valueMillis,openToYearSelection,errorText} = this.props;
-    const value = this.convertToDateString(valueMillis);
+
+    const value = valueMillis ? this.convertToDateString(valueMillis) : '';
     //console.log(value);
     return(
       <BaseDatePicker

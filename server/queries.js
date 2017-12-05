@@ -11,11 +11,11 @@ const cn = {
 
 const db = pgp(cn);
 
-function checkUser(user){
-  return db.any('SELECT * FROM \"Users\" WHERE username = $1',user);//promise
+function getUser(user){
+  return db.any('SELECT * FROM \"Users\" WHERE username = $1',[user]);//promise
 }
 function checkEmail(email){
-  return db.any('SELECT * FROM \"Users\" WHERE email = $1',email);//promise
+  return db.any('SELECT * FROM \"Users\" WHERE email = $1',[email]);//promise
 }
 
 function checkPass(email,password){
@@ -23,13 +23,22 @@ function checkPass(email,password){
     return data.length !== 0 && bcrypt.compare(password,data[0].hash).then(res => data[0].username);
   });
 }
+function getProfile(user){
+  return db.any('SELECT * FROM profile WHERE username = $1',[user]);
+}
+function updateUser(info){
+    return Promise.all[
+      db.none('UPDATE \"Users\" SET name = $1, country = $2, birthday = $3, gender = $4 WHERE username = $5'
+      ,[info.name,info.country,info.birthday,info.gender,info.username]),
+      db.none('UPDATE profile SET about = $1, interests = $2 WHERE username = $3',[info.about,info.interests,info.username])];
+}
 
-function addUser(user){
-  return bcrypt.hash(user.password, saltRounds).then(hash=>{
-    return db.one('INSERT INTO \"Users\" (username,email,hash) VALUES($1,$2,$3) RETURNING username',[user.username,user.email,hash])
+function addUser(info){
+  return bcrypt.hash(info.password, saltRounds).then(hash=>{
+    return db.one('INSERT INTO \"Users\" (username,email,hash) VALUES($1,$2,$3) RETURNING username',[info.username,info.email,hash])
       .then(data => {
         console.log("addUser","INSERTED SUCCESSFULLY");
-        db.none('INSERT INTO profile (username) VALUES($1)',user);//Create Profile
+        db.none('INSERT INTO profile (username) VALUES($1)',[info.username]);//Create Profile
         return data.username;
       })
       .catch(err => {
@@ -38,15 +47,38 @@ function addUser(user){
         return "Internal Database Error";
       });
   });
-
 }
+
+function addMedia(info){
+  return db.none('INSERT INTO media (mediaid,type,username,title,description) VALUES($1,$2,$3,$4,$5)',
+          [info.mediaid,info.type,info.username,info.title,info.description])
+    .then(()=>{
+      switch (info.type) {
+        case "pi":
+          
+          break;
+        case "im":
+
+          break;
+        case "im":
+
+          break;
+        default:
+
+      }
+    });
+}
+
 function getPpPromise(){
   return db;
 }
 module.exports = {
-  checkUser,
+  getUser,
+  getProfile,
   checkEmail,
   checkPass,
   addUser,
+  addMedia,
+  updateUser,
   getPpPromise
 }

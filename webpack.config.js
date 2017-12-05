@@ -9,8 +9,18 @@ module.exports = {
   module: {
     loaders: [
       { test: /\.css$/, loader: [ 'style-loader', 'css-loader' ] },
-      
-      { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/, query: { presets: ["react","babel-preset-es2015"] }}
+
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        exclude: /node_modules/,
+        query: {
+          presets: ["react","babel-preset-es2015"],
+          plugins: ["transform-object-rest-spread"]
+        }
+      }
     ]
-  }
+  },
+
+
 };

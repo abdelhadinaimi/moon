@@ -5,6 +5,7 @@ class Auth {
   }
 
   static isUserAuthenticated() {
+      this.validateAuthentification();
      return localStorage.getItem('token') !== null;
   }
 
@@ -13,9 +14,30 @@ class Auth {
    *
    */
   static deauthenticateUser() {
+    let request = new Request('http://localhost:3000/api/logout',{
+      method: 'POST',
+      headers: new Headers({'Content-Type': 'application/json'})
+    });
+    fetch(request,{credentials: 'include'});
     localStorage.removeItem('token');
   }
 
+  static validateAuthentification(){
+    let request = new Request('http://localhost:3000/api/isAuthenticated',{
+      method: 'POST',
+      headers: new Headers({'Content-Type': 'application/json'})
+    });
+    fetch(request,{credentials: 'include'})
+    .then(res=>res.json())
+    .then(data=>{
+        if(!data.connected)
+          this.deauthenticateUser();
+        else{
+          //this.authenticateUser(data.user); //TODO fix bug when user logout and refreshes the page he is still logged in client-side
+        }
+    });
+
+  }
   /**
    * Get a token value.
    *

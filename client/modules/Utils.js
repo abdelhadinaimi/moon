@@ -28,6 +28,7 @@ class Utils{
   }
 
   static calculateAge(birthday) { // birthday is a date
+    if(!birthday) return '';
     birthday = new Date(birthday);
     var ageDifMs = Date.now() - birthday.getTime();
     var ageDate = new Date(ageDifMs); // miliseconds from epoch
