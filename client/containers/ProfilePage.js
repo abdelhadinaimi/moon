@@ -4,6 +4,7 @@ import EditProfilePage from './EditProfilePage';
 import { Redirect,Route } from 'react-router-dom';
 import PrivateRoute from '../components/utils/PrivateRoute';
 import Utils from '../modules/Utils';
+
 class ProfilePage extends React.Component{
 
   constructor(props){
@@ -24,7 +25,12 @@ class ProfilePage extends React.Component{
   }
 
   getUserInfo(username){
-    Utils.getUserInfo(username)
+    let request = new Request('http://localhost:3000/api/user/'+username,{
+      method: 'POST',
+      headers: new Headers({'Content-Type': 'application/json'})
+    });
+    return fetch(request,{credentials: 'include'})
+    .then(res=>res.json())
     .then(data =>{
       if(data.error)
         this.setState({redirect : true});
@@ -40,7 +46,6 @@ class ProfilePage extends React.Component{
         <Route exact path={"/profile/"+this.state.info.username+"/"} render={()=>(<ProfileComponent info={this.state.info}/>)}/>
         <Route path={"/profile/"+this.state.info.username+"/edit"} render={()=>(<EditProfilePage info={this.state.info}/>)}/>
       </div>
-
     )
   }
 }

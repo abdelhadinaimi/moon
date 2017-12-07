@@ -1,6 +1,5 @@
 import React from 'react';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import Paper from 'material-ui/Paper';
 import Avatar from 'material-ui/Avatar';
 import IconButton from 'material-ui/IconButton';
 import ActionEdit from 'material-ui/svg-icons/image/edit';

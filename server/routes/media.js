@@ -18,7 +18,15 @@ var storage = multer.diskStorage({
     cb(null,id.substring(0,5)+id.substring(10,15));
   }
 });
-var upload = multer({ storage: storage });
+var upload = multer({
+    storage: storage,
+    fileFilter: (req,file,cb) => {
+      let validationResult = validateUploadInput(req.body);
+      cb(null,validationResult.success);
+      req.validationResult = validationResult;
+    }
+
+});
 
 //hashids
 /* TODO
@@ -33,32 +41,72 @@ router.get('/media/profile/:id',(req,res)=>{
   res.sendFile(path.resolve(__dirname,'..','..','uploads','profile',req.params.id));
 });
 
-router.post('/upload',upload.single('file'),(req,res)=>{
-    console.log(req.body.tags.split(','));
-    if(req.isAuthenticated()){
-      let validationResult = validateUploadInput(req.body);
-      if(!validationResult.success){
-        return res.status(400).json(validationResult);
-      }
-      const media = {
-        mediaid: req.file.filename,
-        username: req.user,
-        title: req.body.title,
-        description: req.body.description,
-        type: req.body.type,
-        ext: req.body.ext,
-        file: req.file
-
-      }
-      //db.addMedia(media);
-      return res.status(200).json({success:true,message:"Upload Successful"});
-    }else{
-      return res.json({
-        success: false,
-        message: "You need to login before submitting"
-      });
-    }
+router.get('/media/:id',(req,res)=>{
+  res.sendFile(path.resolve(__dirname,'..','..','uploads','media',req.params.id));
 });
+
+const cpUpload = upload.fields([{name:'file',maxCount: 1}, {name:'thumbnail',maxCount: 1}]);
+
+router.post('/upload',cpUpload,(req,res)=>{
+  if(req.isAuthenticated()){
+    let validationResult = req.validationResult;
+    if(!validationResult.success){
+      return res.status(400).json(validationResult);
+    }
+    const media = {
+      mediaid: req.files['file'][0].filename,
+      thumbnail: req.files['thumbnail'] ? req.files['thumbnail'][0] : {},
+      username: req.user,
+      title: req.body.title,
+      description: req.body.description,
+      type: req.body.type,
+      ext: req.body.ext,
+      file: req.files['file'][0]
+    }
+    db.addMedia(media);
+    return res.status(200).json({success:true,message:"Upload Successful",mediaid:media.mediaid});
+  }else{
+    return res.json({
+      success: false,
+      message: "You need to login before submitting"
+    });
+  }
+});
+
+router.post('/media/:id',(req,res)=>{
+  getMedia(req.params.id).then(data=>{
+    if(data.username === undefined){
+        res.status(404).json({error:"Media not found"});
+    }else{
+      data.isOwner = false;
+      if(req.isAuthenticated() && req.user === data.username){
+        data.isOwner = true;
+      }
+      res.json(data);
+    }
+  })
+});
+
+function getMedia(mediaId){
+  let data = {};
+  return db.getMedia(mediaId)
+    .then(media => {
+      if(!media || media.length == 0)
+        return {};
+      media = media[0];
+      let type = '';
+      if(media.type === 'pi'){
+        type = 'picture';
+      }
+      else if(media.type === 'vi'){
+        type = 'video';
+      }
+      else if(media.type === 'mu'){
+        type = 'music';
+      }
+      return db.getMediaType(mediaId,type).then(data => Object.assign(media,data[0]));
+    });
+}
 
 function validateUploadInput(payload){
   const errors = {};

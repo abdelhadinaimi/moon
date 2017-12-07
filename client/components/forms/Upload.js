@@ -27,9 +27,14 @@ const UploadForm = ({onSubmit,onChange,errors,data,message}) =>{
           </div>
 
           <div className="field-line">
-            <UploadFile onChange={onChange} name="file" errorText={errors.file} value={data.file}/>
+            <UploadFile onChange={onChange} name="file" label='Choose A file' errorText={errors.file} value={data.file}/>
           </div>
-
+          {
+            (data.type === 'mu' || data.type === 'vi') && <div className="field-line">
+              <UploadFile onChange={onChange} name="thumbnail" label='Choose A thumbnail' errorText={errors.thumbnail} value={data.thumbnail}/>
+            </div>
+          }
+          
           <div className="field-line">
             <TextField hintText="Description" style={{width:'384px'}}
               multiLine={true} rows={1} rowsMax={4} name="description" errorText={errors.description} value={data.description} onChange={onChange}/>

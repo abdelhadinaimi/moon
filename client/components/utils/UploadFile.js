@@ -32,7 +32,7 @@ class UploadFile extends React.Component {
         //,wordWrap: 'break-word'
         style={{width:'256px',zIndex:'99999',textAlign:'center'}}
         containerElement='label'
-        label={displayName ? displayName : 'Choose A file' }>
+        label={displayName ? displayName : this.props.label }>
         <input
           name={this.props.name}
           type="file"

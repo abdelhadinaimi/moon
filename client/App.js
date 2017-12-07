@@ -11,6 +11,7 @@ import NotFoundPage from './components/NotFoundPage';
 import ProfilePage from './containers/ProfilePage';
 import PrivateRoute from './components/utils/PrivateRoute.js';
 import UploadPage from './containers/UploadPage';
+import MediaPage from './containers/MediaPage';
 import './styles/App.css';
 
 class App extends React.Component {
@@ -27,6 +28,7 @@ class App extends React.Component {
                 <Route path='/logout' component={LogoutPage}/>
                 <Route path='/profile/:user' component={ProfilePage}/>
                 <PrivateRoute path='/upload' component={UploadPage}/>
+                <Route path='/media/:id' component={MediaPage}/>
                 <Route path='/notfound' component={NotFoundPage}/>
                 <Route component={NotFoundPage}/>
               </Switch>

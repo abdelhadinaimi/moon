@@ -21,10 +21,9 @@ function getUserInfo(username){
   let data = {};
   return db.getUser(username)
     .then(user=> {
-
-      if(!user || user.length == 0){
+      if(!user || user.length == 0)
         return {};
-      }
+    
       user = user[0];
       data.birthday = user.birthday;
       data.country = user.country;
