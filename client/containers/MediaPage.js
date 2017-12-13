@@ -20,7 +20,7 @@ class MediaPage extends React.Component{
     }
   }
   getMediaInfo(mediaId){
-    let request = new Request('http://localhost:3000/api/media/'+mediaId,{
+    let request = new Request('/api/media/'+mediaId,{
       method: 'POST',
       headers: new Headers({'Content-Type': 'application/json'})
     });

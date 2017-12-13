@@ -14,7 +14,7 @@ class Auth {
    *
    */
   static deauthenticateUser() {
-    let request = new Request('http://localhost:3000/api/logout',{
+    let request = new Request('/api/logout',{
       method: 'POST',
       headers: new Headers({'Content-Type': 'application/json'})
     });
@@ -23,7 +23,7 @@ class Auth {
   }
 
   static validateAuthentification(){
-    let request = new Request('http://localhost:3000/api/isAuthenticated',{
+    let request = new Request('/api/isAuthenticated',{
       method: 'POST',
       headers: new Headers({'Content-Type': 'application/json'})
     });

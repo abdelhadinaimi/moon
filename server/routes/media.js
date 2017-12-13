@@ -6,7 +6,6 @@ const db = require('../queries');
 
 const router = new express.Router();
 
-
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.resolve(__dirname,'..','..','uploads','media'));
@@ -28,14 +27,14 @@ var upload = multer({
 
 });
 
-//hashids
-/* TODO
-  1- POST /upload uploads any media DONE
-  2- validate media DONE
-  3- generate unique ID DONE
-  4- save it to /media/:id on the server DONE
-  5- redirect to /media/:id client side
-  */
+router.post('/media/recentUser',(req,res)=>{
+    db.getLastestUserMedia(req.body.user).then(data=>{
+        const dataPromiseMap = data.map(id => getMedia(id.mediaid).then(media => media));
+        Promise.all(dataPromiseMap).then(result=>{
+            res.json(result);
+        });
+    });
+});
 
 router.get('/media/profile/:id',(req,res)=>{
   res.sendFile(path.resolve(__dirname,'..','..','uploads','profile',req.params.id));
@@ -59,6 +58,7 @@ router.post('/upload',cpUpload,(req,res)=>{
       username: req.user,
       title: req.body.title,
       description: req.body.description,
+      tags: req.body.tags.split(','),
       type: req.body.type,
       ext: req.body.ext,
       file: req.files['file'][0]
@@ -88,7 +88,6 @@ router.post('/media/:id',(req,res)=>{
 });
 
 function getMedia(mediaId){
-  let data = {};
   return db.getMedia(mediaId)
     .then(media => {
       if(!media || media.length == 0)
@@ -104,8 +103,14 @@ function getMedia(mediaId){
       else if(media.type === 'mu'){
         type = 'music';
       }
-      return db.getMediaType(mediaId,type).then(data => Object.assign(media,data[0]));
+      var tags = db.getTags(mediaId).then(data => Object.assign(media,{tags: data}));
+      var mediaType = db.getMediaType(mediaId,type).then(data => Object.assign(media,data[0]));
+      return Promise.all([tags,mediaType]).then(r => media);
     });
+}
+
+function getTags(mediaId){
+  return db.getTags(data => data);
 }
 
 function validateUploadInput(payload){

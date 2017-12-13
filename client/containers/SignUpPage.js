@@ -48,7 +48,7 @@ class SignUpPage extends React.Component {
   processForm(event) {
     event.preventDefault(); // prevent default action. in this case, action is the form submission event
     let data = this.state.user;
-    let request = new Request('http://localhost:3000/api/signup',{
+    let request = new Request('/api/signup',{
       method: 'POST',
       headers: new Headers({'Content-Type': 'application/json'}),
       body: JSON.stringify(data)

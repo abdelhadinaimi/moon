@@ -7,6 +7,7 @@ import Utils from '../modules/Utils';
 import EditProfile from '../components/forms/EditProfile';
 import {Link} from 'react-router-dom';
 import ImageLetter from './utils/ImageLetter';
+import GridContainer from '../containers/GridListContainer';
 //259 46
 const ProfileInfoItem = ({title,content}) => (
   <tr className="profile-info-title" style={{width:'259px',height:'46px'}}>
@@ -35,7 +36,7 @@ const UserComponent = ({info}) => {
         }
         <div className="profile-container">
           <Avatar size={90} style={{marginRight:'16px'}}>
-            <ImageLetter src={"http://localhost:3000/api/media/profile/"+info.username} letter={info ? info.username[0] : ""}/>
+            <ImageLetter src={"/api/media/profile/"+info.username} letter={info ? info.username[0] : ""}/>
           </Avatar>
           <table className="profile-info-section">
             <tbody>
@@ -57,6 +58,10 @@ const UserComponent = ({info}) => {
           <CardText>
             {info.interests || "Nothing here yet."}
           </CardText>
+        </div>
+        <h2 className="card-heading text-center">Recent Uploads</h2>
+        <div className="field-line">
+          <GridContainer fetchType="recentUser" user={info.username}/>
         </div>
       </Card>
     )

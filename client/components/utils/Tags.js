@@ -14,7 +14,7 @@ class Tags extends Component{
     super(props);
 
     this.state={
-      tags:props.defTags,
+      tags:[],
       value:"",
       errorText:null,
       sourceTags:props.sourceTags.slice() //copy of source tags - we will change it
@@ -27,9 +27,9 @@ class Tags extends Component{
 
     });
 
-
+    console.log(this.state);
     //set error text value
-    this.errorText=(this.props.textField && this.props.textField.errorText)?this.props.textField.errorText:"Value is required";
+    this.errorText=(this.props.textField && this.props.textField.errorText)?this.props.textField.errorText:"Tag must be between 3 and 30 characters";
 
   }
 
@@ -73,7 +73,7 @@ class Tags extends Component{
   handleKeyPress(e){
 
     if (e.charCode===13){//enter
-        //e.preventDefault();
+        e.preventDefault();
         this.add(e.target.value);
 
       }
@@ -153,16 +153,14 @@ class Tags extends Component{
 
   //add new tag
   add(value){
-
-    if (value.trim().length===0)//empty
-    {
-      //set error info
-      this.showInputError();
-      return;
-    }
-    value = value.trim(); //remove spaces
     let values = value.split(',');
     values.reverse().map(value => {
+      value = value.trim(); //remove spaces
+
+      if(value.length > 30 || value.length < 3){
+        this.showInputError();
+        return;
+      }
       if (this.props.onlyFromSource){
         //so only tags exists in souce can be added
         if (!this.tagInSourceList(value))

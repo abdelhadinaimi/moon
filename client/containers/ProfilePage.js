@@ -25,7 +25,7 @@ class ProfilePage extends React.Component{
   }
 
   getUserInfo(username){
-    let request = new Request('http://localhost:3000/api/user/'+username,{
+    let request = new Request('/api/user/'+username,{
       method: 'POST',
       headers: new Headers({'Content-Type': 'application/json'})
     });

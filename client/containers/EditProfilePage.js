@@ -29,7 +29,7 @@ class EditProfilePage extends React.Component {
     const {birthday,country,gender,name,username,interests,about,photo} = this.state.info;
     //let data = { birthday,country, gender,name,interests,about,photo };
     let data = new FormData();
-    if(photo && this.validatePhoto(photo[0])){
+    if(!photo && this.validatePhoto(photo[0])){
       data.append('photo', photo[0]);
     }
     else{
@@ -45,7 +45,7 @@ class EditProfilePage extends React.Component {
     data.append('username',username);
     data.append('interests',interests);
     data.append('about',about);
-    let request = new Request('http://localhost:3000/api/user/'+username+'/edit',{
+    let request = new Request('/api/user/'+username+'/edit',{
       method: 'POST',
       body:data
     });
@@ -72,7 +72,7 @@ class EditProfilePage extends React.Component {
     return (type == 'png' || type == 'jpg' || type == 'jpeg' || type == 'bmp');
   }
   getCountries(){
-    let request = new Request('http://localhost:3000/api/countries',{
+    let request = new Request(' /api/countries',{
       method: 'POST',
       headers: new Headers({'Content-Type': 'application/json'}),
     });

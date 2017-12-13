@@ -43,7 +43,7 @@ class UploadPage extends React.Component {
     }
     const {file,title,description,tags,thumbnail} = this.state.data;
     let data = new FormData();
-    let ntags = tags.map(i => i.label);
+    let ntags = tags.map(i => i.label.toLowerCase());
     data.append('title',title);
     data.append('description',description);
     data.append('tags',ntags);
@@ -51,7 +51,7 @@ class UploadPage extends React.Component {
     data.append('ext',validationResult.ext);
     data.append('thumbnail',thumbnail);
     data.append('file',file);
-    let request = new Request('http://localhost:3000/api/upload',{
+    let request = new Request('/api/upload',{
       method: 'POST',
       body:data
     });

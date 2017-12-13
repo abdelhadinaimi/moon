@@ -31,7 +31,7 @@ class AvatarMenu extends React.Component{
         targetOrigin={{horizontal: 'right', vertical: 'bottom'}}
         iconButtonElement={
         <Avatar size={70} style={{cursor:'pointer',marginBottom:'8px'}}>
-          <ImageLetter src={"http://localhost:3000/api/media/profile/"+user} letter={user ? user[0] : ""}/>
+          <ImageLetter src={"/api/media/profile/"+user} letter={user ? user[0] : ""}/>
         </Avatar>
         }>
         <MenuItemLink to={'/profile/'+user} primaryText={user}/>

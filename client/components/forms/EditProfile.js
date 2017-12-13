@@ -48,7 +48,7 @@ const EditProfile = ({info,onSubmit,onChange,errors,message}) => (
         {errors.message && <p className="error-message text-center">{errors.message}</p>}
       <IconButton style={{width:'114px',height:'114px'}} tooltip="Change you photo" tooltipPosition="top-right">
         <Avatar size={90} style={{marginRight:'16px',cursor:'pointer'}}>
-          <ImageLetter src={"http://localhost:3000/api/media/profile/"+info.username} letter={info ? info.username[0] : ""}/>
+          <ImageLetter src={"/api/media/profile/"+info.username} letter={info ? info.username[0] : ""}/>
           <input type="file" style={uploadInput} name="photo" onChange={(e)=>onChange(e,e.target.files)}/>
         </Avatar>
       </IconButton>
