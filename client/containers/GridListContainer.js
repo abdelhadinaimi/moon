@@ -46,32 +46,5 @@ class GridContainer extends React.Component{
     );
   }
 }
-const tilesData = [
-  {
-    img: 'http://www.material-ui.com/images/grid-list/00-52-29-429_640.jpg',
-    title: 'Breakfast',
-    author: 'jill111',
-    id:'64scsdsd'
-  },
-  {
-    img: 'http://www.material-ui.com/images/grid-list/burger-827309_640.jpg',
-    title: 'Tasty burger',
-    author: 'pashminu',
-    id:'64scsdsdsq'
-  },
-  {
-    img: 'http://www.material-ui.com/images/grid-list/00-52-29-429_640.jpg',
-    title: 'Breakfast',
-    author: 'jill111',
-    id:'84scsdsd'
-  },
-  {
-    img: 'http://www.material-ui.com/images/grid-list/burger-827309_640.jpg',
-    title: 'Tasty burger',
-    author: 'pashminu',
-    id:'64scsds6q'
-  },
-];
-
 
 export default GridContainer;
