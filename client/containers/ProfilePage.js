@@ -1,6 +1,7 @@
 import React from 'react';
 import ProfileComponent from '../components/ProfileComponent';
 import EditProfilePage from './EditProfilePage';
+import ProfileAllMedia from '../components/ProfileAllMedia';
 import { Redirect,Route } from 'react-router-dom';
 import PrivateRoute from '../components/utils/PrivateRoute';
 import Utils from '../modules/Utils';
@@ -45,6 +46,7 @@ class ProfilePage extends React.Component{
       <div>
         <Route exact path={"/profile/"+this.state.info.username+"/"} render={()=>(<ProfileComponent info={this.state.info}/>)}/>
         <Route path={"/profile/"+this.state.info.username+"/edit"} render={()=>(<EditProfilePage info={this.state.info}/>)}/>
+        <Route path={"/profile/"+this.state.info.username+"/all"} render={()=>(<ProfileAllMedia info={this.state.info}/>)}/>
       </div>
     )
   }

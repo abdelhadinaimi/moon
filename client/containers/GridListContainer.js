@@ -36,13 +36,12 @@ class GridContainer extends React.Component{
       this.setState({
         tilesData: data
       });
-      console.log(data);
     })
   }
 
   render(){
     return(
-        <GridList tilesData={this.state.tilesData}/>
+        <GridList tilesData={this.state.tilesData} display={this.props.fetchType}/>
     );
   }
 }

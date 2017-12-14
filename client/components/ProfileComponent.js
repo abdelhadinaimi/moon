@@ -7,6 +7,7 @@ import Utils from '../modules/Utils';
 import EditProfile from '../components/forms/EditProfile';
 import {Link} from 'react-router-dom';
 import ImageLetter from './utils/ImageLetter';
+import RaisedButton from 'material-ui/RaisedButton';
 import GridContainer from '../containers/GridListContainer';
 //259 46
 const ProfileInfoItem = ({title,content}) => (
@@ -62,6 +63,11 @@ const UserComponent = ({info}) => {
         <h2 className="card-heading text-center">Recent Uploads</h2>
         <div className="field-line">
           <GridContainer fetchType="recentUser" user={info.username}/>
+        </div>
+        <div className="button-line text-center">
+          <Link to={'/profile/'+ info.username +'/all'}>
+            <RaisedButton label="View All" primary/>
+          </Link>
         </div>
       </Card>
     )

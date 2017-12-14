@@ -40,8 +40,8 @@ function getMediaType(mediaid,type){
   return db.any('SELECT * FROM ' + type + ' WHERE mediaid = $1',[mediaid]);
 }
 
-function getLastestUserMedia(user){
-  return db.any('SELECT mediaid FROM media WHERE username = $1 and NOT \"isThumbnail\" ORDER BY datecreated DESC NULLS LAST LIMIT 5',[user]);
+function getLastestUserMedia(user,limit){
+  return db.any('SELECT mediaid FROM media WHERE username = $1 and NOT \"isThumbnail\" ORDER BY datecreated DESC NULLS LAST ' + (limit ? "LIMIT "+limit : ""),[user]);
 }
 function updateUser(info){
     return Promise.all[

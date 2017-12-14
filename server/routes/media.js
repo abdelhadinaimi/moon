@@ -28,6 +28,14 @@ var upload = multer({
 });
 
 router.post('/media/recentUser',(req,res)=>{
+    db.getLastestUserMedia(req.body.user,5).then(data=>{
+        const dataPromiseMap = data.map(id => getMedia(id.mediaid).then(media => media));
+        Promise.all(dataPromiseMap).then(result=>{
+            res.json(result);
+        });
+    });
+});
+router.post('/media/recentAll',(req,res)=>{
     db.getLastestUserMedia(req.body.user).then(data=>{
         const dataPromiseMap = data.map(id => getMedia(id.mediaid).then(media => media));
         Promise.all(dataPromiseMap).then(result=>{
