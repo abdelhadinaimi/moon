@@ -78,10 +78,7 @@ router.post('/media/:id',(req,res)=>{
     if(data.username === undefined){
         res.status(404).json({error:"Media not found"});
     }else{
-      data.isOwner = false;
-      if(req.isAuthenticated() && req.user === data.username){
-        data.isOwner = true;
-      }
+      data.isOwner = (req.isAuthenticated() && req.user === data.username);
       res.json(data);
     }
   })

@@ -3,6 +3,7 @@ import MediaComponent from '../components/MediaComponent';
 import { Redirect,Route } from 'react-router-dom';
 import PrivateRoute from '../components/utils/PrivateRoute';
 import Utils from '../modules/Utils';
+import EditMediaPage from './EditMediaPage';
 
 class MediaPage extends React.Component{
   constructor(props){
@@ -37,8 +38,11 @@ class MediaPage extends React.Component{
 
   render(){
     return(
-      this.state.redirect ? <Redirect to='/notfound'/> :
-        <Route path={"/media/"+this.state.info.mediaid+"/"} render={()=>(<MediaComponent info={this.state.info}/>)}/>
+      this.state.redirect || this.state.info.isThumbnail ? <Redirect to='/notfound'/> :
+      <div>
+        <Route exact path={"/media/"+this.state.info.mediaid+"/"} render={()=>(<MediaComponent info={this.state.info}/>)}/>
+        <Route path={"/media/"+this.state.info.mediaid+"/edit"} render={()=>(<EditMediaPage info={this.state.info}/>)}/>
+      </div>
 
     )
   }

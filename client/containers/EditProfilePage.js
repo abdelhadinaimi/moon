@@ -3,6 +3,7 @@ import EditProfile from '../components/forms/EditProfile';
 import Utils from '../modules/Utils';
 import { Redirect } from 'react-router-dom';
 import * as mime from 'react-native-mime-types';
+
 class EditProfilePage extends React.Component {
   constructor(props){
     super(props);

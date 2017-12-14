@@ -14,23 +14,20 @@ class Tags extends Component{
     super(props);
 
     this.state={
-      tags:[],
+      tags:props.defTags,
       value:"",
       errorText:null,
       sourceTags:props.sourceTags.slice() //copy of source tags - we will change it
     }
-
     //elimination existsing tags from source tags
     this.state.sourceTags=this.state.sourceTags.filter((tag)=>{
 
       return !props.defTags.find((dtag)=>{  return tag.label===dtag.label });//elemeny must not exists in def tags
 
     });
-
-    console.log(this.state);
     //set error text value
     this.errorText=(this.props.textField && this.props.textField.errorText)?this.props.textField.errorText:"Tag must be between 3 and 30 characters";
-
+    
   }
 
 

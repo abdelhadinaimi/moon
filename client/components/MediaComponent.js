@@ -1,10 +1,10 @@
 import React from 'react';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import { Player } from 'video-react';
+import IconButton from 'material-ui/IconButton';
+import ActionEdit from 'material-ui/svg-icons/image/edit';
 import { Link } from 'react-router-dom';
 import "../../node_modules/video-react/dist/video-react.css";
-
-
 
 const styles = {
   img: {
@@ -19,7 +19,13 @@ const MediaComponent = ({info}) => {
     return(
       <Card className="container">
           <h2 className="card-heading text-center">{info.title}</h2>
-
+          {info.isOwner &&
+            <IconButton className="profile-edit-button" tooltip="Edit Media">
+              <Link to={'/media/'+ info.mediaid +'/edit'}>
+                <ActionEdit/>
+              </Link>
+            </IconButton>
+          }
           <div className="field-line">
             {
               info.type === 'pi' ?
