@@ -45,7 +45,7 @@ class GridListComponent extends React.Component{
         (<div style={styles.root}>
           <GridList style={gridlistStyle}
             cellHeight={180}
-            cols={4}>
+            cols={1}>
             {tilesData.map((tile) => (
               <GridTile
                 key={tile.mediaid}

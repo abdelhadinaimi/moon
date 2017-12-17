@@ -53443,7 +53443,7 @@ var GridListComponent = function (_React$Component) {
           _GridList.GridList,
           { style: gridlistStyle,
             cellHeight: 180,
-            cols: 4 },
+            cols: 1 },
           tilesData.map(function (tile) {
             return _react2.default.createElement(
               _GridList.GridTile,
