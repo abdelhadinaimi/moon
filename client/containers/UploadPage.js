@@ -2,6 +2,7 @@ import React from 'react';
 import Upload from '../components/forms/Upload';
 import * as mime from 'react-native-mime-types';
 import { Redirect } from 'react-router-dom';
+import Utils from '../modules/Utils';
 class UploadPage extends React.Component {
 
   constructor(props){
@@ -55,6 +56,7 @@ class UploadPage extends React.Component {
       method: 'POST',
       body:data
     });
+    console.log(request);
     fetch(request,{credentials: 'include'})
       .then(res => res.json())
       .then(data => {
@@ -84,7 +86,6 @@ class UploadPage extends React.Component {
       errors.message = "Please choose a valid media file to upload";
       isFormValid =  false;
     }
-    console.log(thumbnail);
     if(thumbnail.size && fileType.type !== 'pi' && this.getFileExt(thumbnail).type !== 'pi'){
       errors.message = "Please choose a valid photo for the media";
       isFormValid =  false;
@@ -92,18 +93,7 @@ class UploadPage extends React.Component {
     return {errors,success:isFormValid,type:fileType.type,ext:fileType.ext};
   }
   getFileExt(file){
-    const ext = mime.extension(file.type);
-    let type = '';
-    if(ext === 'png' || ext === 'jpg' || ext === 'jpeg' || ext === 'bmp'){
-      type = 'pi';
-    }
-    else if(ext === 'avi' || ext === 'mp4' || ext === 'mov' || ext === 'wmv' || ext === 'flv' || ext === 'webm'){
-      type = 'vi';
-    }
-    else if(ext === 'wav' || ext === 'mp3' || ext === 'ogg' || ext === 'aac'){
-      type = 'mu';
-    }
-    return {type,ext};
+    return Utils.getFileExt(file);
   }
 
   render(){

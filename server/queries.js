@@ -50,6 +50,10 @@ function updateUser(info){
       db.none('UPDATE profile SET about = $1, interests = $2 WHERE username = $3',[info.about,info.interests,info.username])];
 }
 
+function updateMedia(info){
+  return db.none('UPDATE media SET title = $1, description = $2 WHERE mediaid = $3',[info.title,info.description,info.mediaid]);
+}
+
 function addUser(info){
   return bcrypt.hash(info.password, saltRounds).then(hash=>{
     return db.one('INSERT INTO users (username,email,hash) VALUES($1,$2,$3) RETURNING username',[info.username,info.email,hash])
@@ -92,6 +96,9 @@ function addMedia(info){
 function addTag(tag,mediaid){
   return db.none('INSERT INTO tag (tag,mediaid) VALUES ($1,$2)',[tag,mediaid]);
 }
+function removeTag(tag,mediaid){
+  return db.none('DELETE FROM tag WHERE tag = $1 AND mediaid = $2',[tag,mediaid]);
+}
 function getPpPromise(){
   return db;
 }
@@ -106,6 +113,9 @@ module.exports = {
   checkPass,
   addUser,
   addMedia,
+  addTag,
   updateUser,
+  updateMedia,
+  removeTag,
   getPpPromise
 }

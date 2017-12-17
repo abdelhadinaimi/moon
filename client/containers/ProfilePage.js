@@ -51,9 +51,4 @@ class ProfilePage extends React.Component{
     )
   }
 }
-
-/*
-this.state.redirect ? <Redirect to='/notfound'/> :
-<ProfileComponent info={this.state.info}/>
-*/
 export default ProfilePage;

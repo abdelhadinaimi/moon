@@ -14,8 +14,6 @@ const containerStyle={
 };
 
 const EditMedia = ({onSubmit,onChange,errors,info,message}) =>{
-  const title = info.title.trim();
-  console.log(info);
   return(
     <Card className="container text-center">
       <form action="/" onSubmit={onSubmit}>
@@ -39,8 +37,9 @@ const EditMedia = ({onSubmit,onChange,errors,info,message}) =>{
         </div>
         <div className="field-line">
           <Tags
-            defTags={info.tags.map(i => Object.assign({label:i}))}
+            defTags={info.tags}
             onAdd={onChange}
+            onRemove={onChange}
             errorText={errors.tags}
             name="tags"
             style={{width:'40%',bottom:'10px'}}

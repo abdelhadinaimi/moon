@@ -1,9 +1,10 @@
+import * as mime from 'react-native-mime-types';
 
 class Utils{
   static capitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
   }
-  
+
   static pgFormatDate(date) {
     function zeroPad(d) {
       return ("0" + d).slice(-2)
@@ -24,6 +25,21 @@ class Utils{
     var ageDifMs = Date.now() - birthday.getTime();
     var ageDate = new Date(ageDifMs); // miliseconds from epoch
     return Math.abs(ageDate.getUTCFullYear() - 1970);
+  }
+
+  static getFileExt(file){
+    const ext = mime.extension(file.type);
+    let type = '';
+    if(ext === 'png' || ext === 'jpg' || ext === 'jpeg' || ext === 'bmp'){
+      type = 'pi';
+    }
+    else if(ext === 'avi' || ext === 'mp4' || ext === 'mov' || ext === 'wmv' || ext === 'flv' || ext === 'webm'){
+      type = 'vi';
+    }
+    else if(ext === 'wav' || ext === 'mp3' || ext === 'ogg' || ext === 'aac'){
+      type = 'mu';
+    }
+    return {type,ext};
   }
 
 }

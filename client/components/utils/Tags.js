@@ -12,7 +12,7 @@ class Tags extends Component{
   constructor(props){
 
     super(props);
-
+    console.log(props.defTags);
     this.state={
       tags:props.defTags,
       value:"",
@@ -27,7 +27,7 @@ class Tags extends Component{
     });
     //set error text value
     this.errorText=(this.props.textField && this.props.textField.errorText)?this.props.textField.errorText:"Tag must be between 3 and 30 characters";
-    
+
   }
 
 
@@ -47,10 +47,11 @@ class Tags extends Component{
       //update state
       this.setState({sourceTags:sourceTags});
     }
-    if (this.props.onRemove !== null) this.props.onRemove(tagData, tags);
-
     this.setState({tags:tags});
-
+    if (this.props.onRemove !== null){
+      const e = { target: {name:this.props.name} };
+      this.props.onRemove(e,tags);
+    }
   }
 
 
@@ -110,14 +111,9 @@ class Tags extends Component{
 
   //checks if tag is on our tag list
   tagExistsInList(tag){
-
-
     return this.state.tags.find((e)=>{
-
       return e.label===tag;
-
     });
-
   }
 
   /*

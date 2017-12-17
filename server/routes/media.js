@@ -11,10 +11,14 @@ var storage = multer.diskStorage({
     cb(null, path.resolve(__dirname,'..','..','uploads','media'));
   },
   filename: function (req, file, cb) {
-    const hashids = new Hashids("sqdqc416c1DZD41"+Math.random()*12480,0);
-    const hex = Buffer(file.originalname).toString('hex') + Math.floor(Math.random() * 1206000);
-    const id = hashids.encodeHex(hex);
-    cb(null,id.substring(0,5)+id.substring(10,15));
+    if(req.body.thumbnailID){
+      cb(null,req.body.thumbnailID);
+    }else{
+      const hashids = new Hashids("sqdqc416c1DZD41"+Math.random()*12480,0);
+      const hex = Buffer(file.originalname).toString('hex') + Math.floor(Math.random() * 1206000);
+      const id = hashids.encodeHex(hex);
+      cb(null,id.substring(0,5)+id.substring(10,15));
+    }
   }
 });
 var upload = multer({
@@ -91,7 +95,29 @@ router.post('/media/:id',(req,res)=>{
     }
   })
 });
+router.post('/media/:id/edit',cpUpload,(req,res)=>{
+    if(req.isAuthenticated() && req.body.username === req.user){
+      let validationResult = validateUploadInput(req.body);
+      if(!validationResult.success){
+        return res.status(400).json(validationResult);
+      }
+      db.updateMedia(req.body);
+      const tags = JSON.parse(req.body.tags);
 
+      tags.forEach(e => {
+        if(e.status === "add")
+          db.addTag(e.label,req.body.mediaid);
+        else if(e.status === "remove")
+          db.removeTag(e.label,req.body.mediaid);
+      });
+      return res.status(200).json({success:true,message:"Edit Successful"});
+    }else{
+      return res.json({
+        success: false,
+        message: "You need to login before submitting"
+      });
+    }
+});
 function getMedia(mediaId){
   return db.getMedia(mediaId)
     .then(media => {
@@ -121,15 +147,12 @@ function getTags(mediaId){
 function validateUploadInput(payload){
   const errors = {};
   let isFormValid = true;
-  if (!payload || typeof payload.title !== 'string' || payload.title.trim().length === 0) {
-    isFormValid = false;
-    errors.title = 'Please provide your title.';
-  }
-  if (payload.title.trim().length < 5 || payload.title.trim().length > 50) {
+
+  if (!payload || typeof payload.title !== 'string' || payload.title.trim().length < 5 || payload.title.trim().length > 50) {
     isFormValid = false;
     errors.title = 'The title must be between 5 and 50 characters';
   }
-  if (payload.description.length > 2000) {
+  if (!payload || typeof payload.title !== 'string' || payload.description.length > 2000) {
     isFormValid = false;
     errors.description = 'The description must be less than 2000 characters';
   }

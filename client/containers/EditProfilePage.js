@@ -30,14 +30,15 @@ class EditProfilePage extends React.Component {
     const {birthday,country,gender,name,username,interests,about,photo} = this.state.info;
     //let data = { birthday,country, gender,name,interests,about,photo };
     let data = new FormData();
-    if(!photo && this.validatePhoto(photo[0])){
-      data.append('photo', photo[0]);
-    }
-    else{
-      const errors = this.state.errors;
-      errors.message = "Please choose a valide image";
-      this.forceUpdate();
-      return;
+    if(photo){
+      if(this.validatePhoto(photo[0])){
+        data.append('photo', photo[0]);
+      }else{
+        const errors = this.state.errors;
+        errors.message = "Please choose a valide image";
+        this.forceUpdate();
+        return;
+      }
     }
     data.append('birthday',birthday);
     data.append('country',country);
@@ -73,7 +74,7 @@ class EditProfilePage extends React.Component {
     return (type == 'png' || type == 'jpg' || type == 'jpeg' || type == 'bmp');
   }
   getCountries(){
-    let request = new Request(' /api/countries',{
+    let request = new Request('/api/countries',{
       method: 'POST',
       headers: new Headers({'Content-Type': 'application/json'}),
     });
