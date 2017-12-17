@@ -53388,18 +53388,34 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var gridListStyles = {
-  recentUser: {
-    display: 'flex',
-    flexWrap: 'nowrap',
-    overflowX: 'auto'
+var fetchTypes = {
+  popularAll: {
+    gridListCols: 4
   },
   recentAll: {
-    width: '100%',
-    height: '100%',
-    overflowY: 'auto'
+    gridListCols: 4,
+    style: {
+      width: '100%',
+      height: '100%',
+      overflowY: 'auto'
+    }
+  },
+  popularUser: {
+    gridListCols: 1
+  },
+  recentUser: {
+    gridListCols: 1,
+    style: {
+      display: 'flex',
+      flexWrap: 'nowrap',
+      overflowX: 'auto'
+    }
+  },
+  similarMedia: {
+    gridListCols: 1
   }
 };
+
 var styles = {
   root: {
     display: 'flex',
@@ -53435,15 +53451,15 @@ var GridListComponent = function (_React$Component) {
           tilesData = _props.tilesData,
           display = _props.display;
 
-      var gridlistStyle = gridListStyles[display];
+      var fetchType = fetchTypes[display];
       return !tilesData.error ? _react2.default.createElement(
         'div',
         { style: styles.root },
         _react2.default.createElement(
           _GridList.GridList,
-          { style: gridlistStyle,
+          { style: fetchType.style,
             cellHeight: 180,
-            cols: 4 },
+            cols: fetchType.gridListCols },
           tilesData.map(function (tile) {
             return _react2.default.createElement(
               _GridList.GridTile,

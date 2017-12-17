@@ -4,19 +4,34 @@ import IconButton from 'material-ui/IconButton';
 import StarBorder from 'material-ui/svg-icons/toggle/star-border';
 import {Link} from 'react-router-dom';
 import  {CardText} from 'material-ui/Card';
-
-const gridListStyles = {
-  recentUser: {
-    display: 'flex',
-    flexWrap: 'nowrap',
-    overflowX: 'auto',
+const fetchTypes = {
+  popularAll:{
+    gridListCols : 4
   },
-  recentAll: {
-    width: '100%',
-    height: '100%',
-    overflowY: 'auto',
+  recentAll : {
+    gridListCols : 4,
+    style:{
+      width: '100%',
+      height: '100%',
+      overflowY: 'auto',
+    }
+  },
+  popularUser : {
+    gridListCols : 1
+  },
+  recentUser : {
+    gridListCols : 1,
+    style:{
+      display: 'flex',
+      flexWrap: 'nowrap',
+      overflowX: 'auto',
+    }
+  },
+  similarMedia : {
+    gridListCols : 1
   }
 };
+
 const styles = {
   root: {
     display: 'flex',
@@ -39,13 +54,13 @@ class GridListComponent extends React.Component{
 
   render(){
     const {tilesData,display} = this.props;
-    const gridlistStyle = gridListStyles[display];
+    const fetchType = fetchTypes[display];
     return(
       !tilesData.error ?
         (<div style={styles.root}>
-          <GridList style={gridlistStyle}
+          <GridList style={fetchType.style}
             cellHeight={180}
-            cols={4}>
+            cols={fetchType.gridListCols}>
             {tilesData.map((tile) => (
               <GridTile
                 key={tile.mediaid}
