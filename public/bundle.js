@@ -55444,6 +55444,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _react = __webpack_require__(0);
@@ -55489,6 +55491,7 @@ var MediaPage = function (_React$Component) {
       info: {}
     };
     _this.getMediaInfo(props.match.params.id);
+    _this.onLikeHandler = _this.onLikeHandler.bind(_this);
     return _this;
   }
 
@@ -55498,6 +55501,28 @@ var MediaPage = function (_React$Component) {
       if (this.state.info.mediaid != nextProps.match.params.id) {
         this.getMediaInfo(nextProps.match.params.id);
       }
+    }
+  }, {
+    key: 'onLikeHandler',
+    value: function onLikeHandler(e) {
+      e.preventDefault();
+      var _state$info = this.state.info,
+          liked = _state$info.liked,
+          mediaid = _state$info.mediaid;
+
+      var like = liked ? 'unlike' : 'like';
+      var request = new Request('/api/media/' + mediaid + '/' + like, {
+        method: 'POST',
+        headers: new Headers({ 'Content-Type': 'application/json' })
+      });
+      fetch(request, { credentials: 'include' });
+      this.setState(function (prevState) {
+        return {
+          info: _extends({}, prevState.info, {
+            liked: !liked
+          })
+        };
+      });
     }
   }, {
     key: 'getMediaInfo',
@@ -55525,7 +55550,7 @@ var MediaPage = function (_React$Component) {
         'div',
         null,
         _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: "/media/" + this.state.info.mediaid + "/", render: function render() {
-            return _react2.default.createElement(_MediaComponent2.default, { info: _this3.state.info });
+            return _react2.default.createElement(_MediaComponent2.default, { info: _this3.state.info, onLike: _this3.onLikeHandler });
           } }),
         _react2.default.createElement(_reactRouterDom.Route, { path: "/media/" + this.state.info.mediaid + "/edit", render: function render() {
             return _react2.default.createElement(_EditMediaPage2.default, { info: _this3.state.info });
@@ -55566,6 +55591,12 @@ var _edit = __webpack_require__(147);
 
 var _edit2 = _interopRequireDefault(_edit);
 
+var _thumbUp = __webpack_require__(420);
+
+var _thumbUp2 = _interopRequireDefault(_thumbUp);
+
+var _colors = __webpack_require__(89);
+
 var _reactRouterDom = __webpack_require__(13);
 
 __webpack_require__(410);
@@ -55582,7 +55613,8 @@ var styles = {
 };
 
 var MediaComponent = function MediaComponent(_ref) {
-  var info = _ref.info;
+  var info = _ref.info,
+      onLike = _ref.onLike;
 
   return _react2.default.createElement(
     _Card.Card,
@@ -55614,6 +55646,16 @@ var MediaComponent = function MediaComponent(_ref) {
           { style: styles.a, to: "/profile/" + info.username },
           info.username
         )
+      ),
+      _react2.default.createElement(
+        'p',
+        { className: 'profile-likes-number' },
+        info.likes + " Likes"
+      ),
+      _react2.default.createElement(
+        _IconButton2.default,
+        { className: 'profile-edit-button', tooltip: info.liked ? "Unlike" : "Like", style: { top: '-50px' }, onClick: onLike },
+        _react2.default.createElement(_thumbUp2.default, { color: info.liked ? _colors.blue500 : _colors.grey800 })
       )
     ),
     _react2.default.createElement(_Card.CardTitle, { title: 'Description' }),
@@ -61707,7 +61749,7 @@ exports = module.exports = __webpack_require__(102)(undefined);
 
 
 // module
-exports.push([module.i, "tbody {\n  margin: 0;\n  font-size: 16px;\n}\n\na {\n  text-decoration: none;\n  color: white;\n}\n\n.text-center {\n  text-align: center;\n}\n\n.top-bar {\n  padding: 10px 15px;\n  margin-bottom: 50px;\n}\n.top-bar::after {\n  content: '';\n  display: block;\n  clear: both;\n}\n\n.top-bar-left {\n  float: left;\n  font-size: 1.5em;\n}\n\n.top-bar-right {\n  float: right;\n}\n\n.top-bar a,\n.nav a {\n  margin: 0 8px;\n}\n\n.container {\n  margin: 0 auto;\n  width: 800px;\n}\n\n.card-heading {\n  padding: 16px;\n}\n\n.field-line, .button-line {\n  padding: 16px;\n}\n\n.error-message {\n  padding: 0 16px;\n  color: tomato;\n}\n\n.success-message {\n  padding: 0 16px;\n  color: green;\n}\n\n.profile-container {\n  padding : 16px;\n  box-sizing: border-box;\n  position: relative;\n  white-space: nowrap;\n}\n\n.profile-info-section {\n  display: inline-block;\n  vertical-align: top;\n  white-space: normal;\n  padding-right: 5%;\n}\n\n.profile-info-title {\n  color: rgba(0, 0, 0, 0.87);\n  display: block;\n  font-size: 15px;\n}\n\n.profile-edit-button {\n  float: right;\n  top: -80px;\n}\n\n.autocomplete {\n  width: 100% !important;\n}\n\n.profile-td {\n  width: 80px;\n  height: 42px;\n}\n\n.data-picker div{\n  width: 100% !important;\n}\n", ""]);
+exports.push([module.i, "tbody {\n  margin: 0;\n  font-size: 16px;\n}\n\na {\n  text-decoration: none;\n  color: white;\n}\n\n.text-center {\n  text-align: center;\n}\n\n.top-bar {\n  padding: 10px 15px;\n  margin-bottom: 50px;\n}\n.top-bar::after {\n  content: '';\n  display: block;\n  clear: both;\n}\n\n.top-bar-left {\n  float: left;\n  font-size: 1.5em;\n}\n\n.top-bar-right {\n  float: right;\n}\n\n.top-bar a,\n.nav a {\n  margin: 0 8px;\n}\n\n.container {\n  margin: 0 auto;\n  width: 800px;\n}\n\n.card-heading {\n  padding: 16px;\n}\n\n.field-line, .button-line {\n  padding: 16px;\n}\n\n.error-message {\n  padding: 0 16px;\n  color: tomato;\n}\n\n.success-message {\n  padding: 0 16px;\n  color: green;\n}\n\n.profile-container {\n  padding : 16px;\n  box-sizing: border-box;\n  position: relative;\n  white-space: nowrap;\n}\n\n.profile-info-section {\n  display: inline-block;\n  vertical-align: top;\n  white-space: normal;\n  padding-right: 5%;\n}\n\n.profile-info-title {\n  color: rgba(0, 0, 0, 0.87);\n  display: block;\n  font-size: 15px;\n}\n\n.profile-edit-button {\n  float: right;\n  top: -80px;\n}\n\n.autocomplete {\n  width: 100% !important;\n}\n\n.profile-td {\n  width: 80px;\n  height: 42px;\n}\n\n.data-picker div{\n  width: 100% !important;\n}\n.profile-likes-number{\n    display: inline-block;\n    float: right;\n    top: -50px;\n    position: relative;\n}\n", ""]);
 
 // exports
 
@@ -61864,6 +61906,44 @@ exports.push([module.i, "body {\n  margin: 0;\n  padding: 0;\n  font-family: san
 
 // exports
 
+
+/***/ }),
+/* 420 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _pure = __webpack_require__(15);
+
+var _pure2 = _interopRequireDefault(_pure);
+
+var _SvgIcon = __webpack_require__(16);
+
+var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var ActionThumbUp = function ActionThumbUp(props) {
+  return _react2.default.createElement(
+    _SvgIcon2.default,
+    props,
+    _react2.default.createElement('path', { d: 'M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1.91l-.01-.01L23 10z' })
+  );
+};
+ActionThumbUp = (0, _pure2.default)(ActionThumbUp);
+ActionThumbUp.displayName = 'ActionThumbUp';
+ActionThumbUp.muiName = 'SvgIcon';
+
+exports.default = ActionThumbUp;
 
 /***/ })
 /******/ ]);

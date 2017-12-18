@@ -96,3 +96,9 @@ a {
 .data-picker div{
   width: 100% !important;
 }
+.profile-likes-number{
+    display: inline-block;
+    float: right;
+    top: -50px;
+    position: relative;
+}

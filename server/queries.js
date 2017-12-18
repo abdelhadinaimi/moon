@@ -99,6 +99,19 @@ function addTag(tag,mediaid){
 function removeTag(tag,mediaid){
   return db.none('DELETE FROM tag WHERE tag = $1 AND mediaid = $2',[tag,mediaid]);
 }
+
+function addLike(username,mediaid){
+  return db.none('INSERT INTO \"like\" (username,mediaid) VALUES ($1,$2)',[username,mediaid]);
+}
+function getLike(username,mediaid) {
+  return db.any('SELECT * FROM \"like\" where username = $1 AND mediaid = $2',[username,mediaid]);
+}
+function getLikesNumber(mediaid) {
+  return db.any('SELECT COUNT(*) from \"like\" where mediaid = $1',[mediaid]);
+}
+function removeLike(username,mediaid){
+  return db.none('DELETE FROM \"like\" WHERE username = $1 AND mediaid = $2',[username,mediaid]);
+}
 function getPpPromise(){
   return db;
 }
@@ -109,13 +122,17 @@ module.exports = {
   getMediaType,
   getTags,
   getLastestUserMedia,
+  getLike,
+  getLikesNumber,
   checkEmail,
   checkPass,
   addUser,
   addMedia,
   addTag,
+  addLike,
   updateUser,
   updateMedia,
   removeTag,
+  removeLike,
   getPpPromise
 }

@@ -86,7 +86,7 @@ router.post('/upload',cpUpload,(req,res)=>{
 });
 
 router.post('/media/:id',(req,res)=>{
-  getMedia(req.params.id).then(data=>{
+  getMedia(req.params.id,req.user).then(data=>{
     if(data.username === undefined){
         res.status(404).json({error:"Media not found"});
     }else{
@@ -118,7 +118,29 @@ router.post('/media/:id/edit',cpUpload,(req,res)=>{
       });
     }
 });
-function getMedia(mediaId){
+
+router.post('/media/:id/like',(req,res)=>{
+  if(req.isAuthenticated()){
+    db.addLike(req.user,req.params.id);
+  }else{
+    return res.json({
+      success: false,
+      message: "You need to login to like this media"
+    });
+  }
+});
+router.post('/media/:id/unlike',(req,res)=>{
+  if(req.isAuthenticated()){
+    db.removeLike(req.user,req.params.id);
+  }else{
+    return res.json({
+      success: false,
+      message: "You need to login to like this media"
+    });
+  }
+});
+
+function getMedia(mediaId,username){
   return db.getMedia(mediaId)
     .then(media => {
       if(!media || media.length == 0)
@@ -134,9 +156,11 @@ function getMedia(mediaId){
       else if(media.type === 'mu'){
         type = 'music';
       }
-      var tags = db.getTags(mediaId).then(data => Object.assign(media,{tags: data}));
-      var mediaType = db.getMediaType(mediaId,type).then(data => Object.assign(media,data[0]));
-      return Promise.all([tags,mediaType]).then(r => media);
+      const tags = db.getTags(mediaId).then(data => Object.assign(media,{tags: data}));
+      const mediaType = db.getMediaType(mediaId,type).then(data => Object.assign(media,data[0]));
+      const like = db.getLike(username,mediaId).then(data => Object.assign(media,{liked: data.length != 0}));
+      const likesNumber = db.getLikesNumber(mediaId).then(data => Object.assign(media,{likes: data[0].count}));
+      return Promise.all([tags,mediaType,like,likesNumber]).then(r => media);
     });
 }
 
