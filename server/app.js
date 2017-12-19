@@ -26,6 +26,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false
   }));
+  console.log("Session initialized");
 app.use(passport.initialize());
 app.use(passport.session());
 

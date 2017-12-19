@@ -1,16 +1,22 @@
 const pgp = require('pg-promise')();
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+// const cn = {
+//     host: 'localhost',
+//     port: 5432,
+//     database: 'moonDB',
+//     user:'postgres',
+//     password: '123456789'
+// }
 const cn = {
-    host: 'localhost',
+    host: 'ec2-23-21-236-249.compute-1.amazonaws.com',
     port: 5432,
-    database: 'moonDB',
-    user:'postgres',
-    password: '123456789'
+    database: 'd4iocl271ck6fg',
+    user:'giwljxwaycnbjn',
+    password: '938d82757d9a5576d42c2fb1ed11560e07046e3582dbe6af30269ff6e20b9c73'
 }
-
 const db = pgp(cn);
-
+console.log("Connection to database",db);
 function getUser(user){
   return db.any('SELECT * FROM users WHERE username = $1',[user]);//promise
 }
