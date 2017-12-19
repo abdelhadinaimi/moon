@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server/server.js"
   },
-  "engine":{
-    "node" : "8.4.0"
+  "engines": {
+    "node": "8.4.0"
   },
   "keywords": [],
   "author": "",
