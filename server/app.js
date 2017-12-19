@@ -9,7 +9,7 @@ const db = require('./queries');
 const app = express();
 
 /* == Loggers == */
-app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms'));
+//app.use(morgan(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] :response-time ms'));
 /* == Headers == */
 app.use( (req, res, next ) => {
   res.header("Access-Control-Allow-Origin", "*");
