@@ -102,3 +102,13 @@ a {
     top: -50px;
     position: relative;
 }
+.field-line-settings{
+    padding: 16px 16px 0px 16px;
+}
+.hr-settings{
+    width:80%;
+    border-top: none rgb(224, 224, 224);
+    border-left: none rgb(224, 224, 224);
+    border-right: none rgb(224, 224, 224);
+    border-bottom: 1px solid rgb(224, 224, 224);
+}

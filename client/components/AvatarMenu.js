@@ -36,6 +36,7 @@ class AvatarMenu extends React.Component{
         }>
         <MenuItemLink to={'/profile/'+user} primaryText={user}/>
         <MenuItemLink to='/upload' primaryText="Upload" on/>
+        <MenuItemLink to='/settings' primaryText="Settings" on/>
         <Divider/>
         <MenuItemLink to='/logout' primaryText="Sign out"/>
       </IconMenu>

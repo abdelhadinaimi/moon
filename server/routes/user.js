@@ -23,7 +23,7 @@ function getUserInfo(username){
     .then(user=> {
       if(!user || user.length == 0)
         return {};
-    
+
       user = user[0];
       data.birthday = user.birthday;
       data.country = user.country;
@@ -48,21 +48,11 @@ router.post('/user/:id', (req, res) => {
     if(data.username === undefined){
         res.status(404).json({error:"User not found"});
     }else{
-      data.isOwner = false;
-      if(req.isAuthenticated() && req.user === data.username){
-        data.isOwner = true;
-      }
+      data.isOwner = req.isAuthenticated() && req.user === data.username;
       res.json(data);
     }
-  })
+  });
 });
-/* TODO
-  1- When user enters this page, check if he is the owner DONE
-  2- if a user posts to this page, check if he is the owner DONE
-  3- validate data DONE
-  4- upload image, if it is provided DONE
-  5- Insert to the database DONE
-*/
 
 router.post('/user/:id/edit',upload.single('photo'),(req,res)=> {
     if(req.isAuthenticated() && req.user === req.params.id){
@@ -78,6 +68,10 @@ router.post('/user/:id/edit',upload.single('photo'),(req,res)=> {
         message: "You need to login before submitting"
       });
     }
+});
+
+router.post('/user/settings',(req,res)=>{
+
 });
 
 function validateEditInput(payload){
