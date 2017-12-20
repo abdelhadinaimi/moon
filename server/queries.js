@@ -13,10 +13,13 @@ const cn = {
     port: 5432,
     database: 'd4iocl271ck6fg',
     user:'giwljxwaycnbjn',
-    password: '938d82757d9a5576d42c2fb1ed11560e07046e3582dbe6af30269ff6e20b9c73'
+    password: '938d82757d9a5576d42c2fb1ed11560e07046e3582dbe6af30269ff6e20b9c73',
+    ssl:true
 }
 const db = pgp(cn);
-console.log("Connection to database",db);
+db.any("SELECT * FROM users").then(data=>{
+  console.log(data);
+})
 function getUser(user){
   return db.any('SELECT * FROM users WHERE username = $1',[user]);//promise
 }

@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const PORT = 1337;
+const PORT = 3000;
 
 /* == initialization == */
 const app = require('./app');
