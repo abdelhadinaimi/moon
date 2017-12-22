@@ -56567,7 +56567,6 @@ function video() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
   var action = arguments[1];
 
-
   switch (action.type) {
     case USER_ACTIVATE:
       return _extends({}, state, {
@@ -56631,6 +56630,11 @@ function video() {
       return _extends({}, state, action.videoProps, {
         seeking: false
       });
+    case ERROR:
+      return _extends({}, state, action.videoProps, {
+        error: 'UNKNOWN ERROR',
+        ended: true
+      });
     case DURATION_CHANGE:
     case TIME_UPDATE:
     case VOLUME_CHANGE:
@@ -56643,7 +56647,6 @@ function video() {
     case LOADED_META_DATA:
     case LOADED_DATA:
     case RESIZE:
-    case ERROR:
       return _extends({}, state, action.videoProps);
     default:
       return state;
@@ -56849,7 +56852,7 @@ function LoadingSpinner(_ref) {
   var player = _ref.player,
       className = _ref.className;
 
-  if (!player.hasStarted || !player.seeking && !player.waiting) {
+  if (player.error || !player.seeking && !player.waiting) {
     return null;
   }
 

@@ -1,24 +1,41 @@
 const express = require('express');
 const path = require('path');
 const multer  = require('multer');
+var multerGdrive = require('../middleware/multer-gdrive');
 var Hashids = require('hashids');
 const db = require('../queries');
-
 const router = new express.Router();
+const fs = require('fs');
+
+const GoogleDrive = require('../googleDrive');
+const googleDrive = new GoogleDrive();
 
 var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.resolve(__dirname,'..','..','uploads','media'));
-  },
   filename: function (req, file, cb) {
+    let filename;
+    let stream = file.stream;
+    stream = new Promise(function(resolve) {
+      return resolve(stream);
+    });
     if(req.body.thumbnailID){
-      cb(null,req.body.thumbnailID);
+      filename = req.body.thumbnailID;
     }else{
       const hashids = new Hashids("sqdqc416c1DZD41"+Math.random()*12480,0);
       const hex = Buffer(file.originalname).toString('hex') + Math.floor(Math.random() * 1206000);
       const id = hashids.encodeHex(hex);
-      cb(null,id.substring(0,5)+id.substring(10,15));
+      fileName = id.substring(0,5)+id.substring(10,15);
     }
+    stream.then(_stream=>{
+      const fileMetadata = {
+        name: fileName,
+        parents:['media']
+      };
+      const media = {
+        mimeType: 'text/plain',
+        body: _stream
+      };
+      googleDrive.uploadFile(media,fileMetadata,cb);
+    });
   }
 });
 var upload = multer({
@@ -28,7 +45,6 @@ var upload = multer({
       cb(null,validationResult.success);
       req.validationResult = validationResult;
     }
-
 });
 
 router.post('/media/recentUser',(req,res)=>{
@@ -59,6 +75,7 @@ router.get('/media/:id',(req,res)=>{
 const cpUpload = upload.fields([{name:'file',maxCount: 1}, {name:'thumbnail',maxCount: 1}]);
 
 router.post('/upload',cpUpload,(req,res)=>{
+  console.log("/upload");
   if(req.isAuthenticated()){
     let validationResult = req.validationResult;
     if(!validationResult.success){
@@ -75,7 +92,7 @@ router.post('/upload',cpUpload,(req,res)=>{
       ext: req.body.ext,
       file: req.files['file'][0]
     }
-    db.addMedia(media);
+    //db.addMedia(media);
     return res.status(200).json({success:true,message:"Upload Successful",mediaid:media.mediaid});
   }else{
     return res.json({
