@@ -8,8 +8,8 @@ const key = require('./data/client_token.json');
 //folder mime : application/vnd.google-apps.folder
 module.exports = class GoogleDrive{
   constructor(){
-    this.MEDIA_FOLDER_ID = '1PJaAp4euTF4dnuNJ9tQ92llQ1PiHslNM';
-    this.PROFILE_FOLDER_ID = '1VPa3j3NngwYPow9OZdFzqQ3m60fbiET8';
+    this.MEDIA_FOLDER_ID = '';
+    this.PROFILE_FOLDER_ID = '';
     this.jwtClient = new google.auth.JWT(
       key.client_email,
       null,
