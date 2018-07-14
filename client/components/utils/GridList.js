@@ -1,12 +1,31 @@
 import React from 'react';
 import {GridList, GridTile} from 'material-ui/GridList';
-import IconButton from 'material-ui/IconButton';
-import StarBorder from 'material-ui/svg-icons/toggle/star-border';
 import {Link} from 'react-router-dom';
 import  {CardText} from 'material-ui/Card';
 const fetchTypes = {
   popularAll:{
-    gridListCols : 4
+    gridListCols : 1,
+    style:{
+      display: 'flex',
+      flexWrap: 'nowrap',
+      overflowX: 'auto',
+    }
+  },
+  popularAllCat: {
+    gridListCols : 4,
+    style:{
+      width: '100%',
+      height: '100%',
+      overflowY: 'auto',
+    }
+  },
+  searchMedia: {
+    gridListCols : 4,
+    style:{
+      width: '100%',
+      height: '100%',
+      overflowY: 'auto',
+    }
   },
   recentAll : {
     gridListCols : 4,
@@ -65,8 +84,8 @@ class GridListComponent extends React.Component{
               <GridTile
                 key={tile.mediaid}
                 title={tile.title}
-                actionIcon={<IconButton><StarBorder color="rgb(0, 188, 212)"/></IconButton>}
                 titleStyle={styles.titleStyle}
+                subtitle={<span>by <Link to={'/profile/'+tile.username}><b>{tile.username}</b></Link></span>}
                 titleBackground="linear-gradient(to top, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.3) 70%,rgba(0,0,0,0) 100%)"
               >
                 <Link to={"/media/"+tile.mediaid} style={{}}>

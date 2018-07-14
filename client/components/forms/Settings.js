@@ -4,18 +4,18 @@ import { Card, CardText } from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 
-const Settings = ({onSubmitEmail,onSubmitPassword,onChange,errors,info,message}) => (
+const Settings = ({onSubmitEmail,onSubmitPassword,onChange,errors,info,message,success}) => (
   <Card className="container text-center">
       <h2 className="card-heading">Settings</h2>
-      { message && <p className="success-message text-center">{message}</p>}
-      {errors.message && <p className="error-message text-center">{errors.message}</p>}
+      { success && message && <p className="success-message text-center">{message}</p>}
+      { !success && message && <p className="error-message text-center">{message}</p>}
       <form action="/" onSubmit={onSubmitEmail}>
         <h3 className="card-heading">Change Email</h3>
         <div className="field-line-settings">
           <TextField floatingLabelText="Email" name="email" errorText={errors.email} onChange={onChange} value={info.email}/>
         </div>
         <div className="field-line-settings">
-          <TextField floatingLabelText="Password" name="passwordEmail" errorText={errors.passwordEmail} onChange={onChange} value={info.passwordEmail}/>
+          <TextField floatingLabelText="Password" type="password" name="passwordEmail" errorText={errors.passwordEmail} onChange={onChange} value={info.passwordEmail}/>
         </div>
         <div className="field-line">
           <RaisedButton type="submit" label="Change Email" primary />
@@ -25,13 +25,13 @@ const Settings = ({onSubmitEmail,onSubmitPassword,onChange,errors,info,message})
     <form action="/" onSubmit={onSubmitPassword}>
       <h3 className="card-heading">Change Password</h3>
       <div className="field-line-settings">
-        <TextField floatingLabelText="Old Password" name="oldPassword" errorText={errors.oldPassword} onChange={onChange} value={info.oldPassword}/>
+        <TextField floatingLabelText="Old Password" type="password" name="oldPassword" errorText={errors.oldPassword} onChange={onChange} value={info.oldPassword}/>
       </div>
       <div className="field-line-settings">
-        <TextField floatingLabelText="New Password" name="passwordChange1" errorText={errors.passwordChange1} onChange={onChange} value={info.passwordChange1}/>
+        <TextField floatingLabelText="New Password" type="password" name="passwordChange1" errorText={errors.passwordChange1} onChange={onChange} value={info.passwordChange1}/>
       </div>
       <div className="field-line-settings">
-        <TextField floatingLabelText="Confirm Password" name="passwordChange2" errorText={errors.passwordChange2} onChange={onChange} value={info.passwordChange2}/>
+        <TextField floatingLabelText="Confirm Password" type="password" name="passwordChange2" errorText={errors.passwordChange2} onChange={onChange} value={info.passwordChange2}/>
       </div>
       <div className="field-line">
         <RaisedButton type="submit" label="Change Password" primary />

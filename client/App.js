@@ -13,6 +13,8 @@ import PrivateRoute from './components/utils/PrivateRoute.js';
 import UploadPage from './containers/UploadPage';
 import MediaPage from './containers/MediaPage';
 import SettingsPage from './containers/SettingsPage';
+import CategoriesComponent from './components/CategoriesComponent';
+import SearchComponent from './components/SearchComponent';
 import './styles/App.css';
 
 class App extends React.Component {
@@ -31,6 +33,10 @@ class App extends React.Component {
                 <PrivateRoute path='/upload' component={UploadPage}/>
                 <PrivateRoute path='/settings' component={SettingsPage}/>
                 <Route path='/media/:id' component={MediaPage}/>
+                <Route path='/categorie/videos' render={()=>(<CategoriesComponent type="Videos"/>)}/>
+                <Route path='/categorie/pictures' render={()=>(<CategoriesComponent type="Pictures"/>)}/>
+                <Route path='/categorie/music' render={()=>(<CategoriesComponent type="Music"/>)}/>
+                <Route path='/search/:tag' component={SearchComponent}/>
                 <Route path='/notfound' component={NotFoundPage}/>
                 <Route component={NotFoundPage}/>
               </Switch>

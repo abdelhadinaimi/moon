@@ -1,44 +1,33 @@
 const express = require('express');
 const path = require('path');
 const multer  = require('multer');
-var multerGdrive = require('../middleware/multer-gdrive');
 var Hashids = require('hashids');
 const db = require('../queries');
 const router = new express.Router();
-const fs = require('fs');
 
-const GoogleDrive = require('../googleDrive');
-const googleDrive = new GoogleDrive();
-
+function getMedias(mediasList){
+  const dataPromiseMap = mediasList.map(id => getMedia(id.mediaid).then(media => media));
+  return Promise.all(dataPromiseMap).then(result=>{
+      return result;
+  });
+}
 var storage = multer.diskStorage({
-  filename: function (req, file, cb) {
-    let filename;
-    let stream = file.stream;
-    stream = new Promise(function(resolve) {
-      return resolve(stream);
-    });
-    if(req.body.thumbnailID){
-      filename = req.body.thumbnailID;
-    }else{
-      const hashids = new Hashids("sqdqc416c1DZD41"+Math.random()*12480,0);
-      const hex = Buffer(file.originalname).toString('hex') + Math.floor(Math.random() * 1206000);
-      const id = hashids.encodeHex(hex);
-      fileName = id.substring(0,5)+id.substring(10,15);
-    }
-    stream.then(_stream=>{
-      const fileMetadata = {
-        name: fileName,
-        parents:['media']
-      };
-      const media = {
-        mimeType: 'text/plain',
-        body: _stream
-      };
-      googleDrive.uploadFile(media,fileMetadata,cb);
-    });
-  }
-});
-var upload = multer({
+   destination: function (req, file, cb) {
+     cb(null, path.resolve(__dirname,'..','..','uploads','media'));
+   },
+   filename: function (req, file, cb) {
+     if(req.body.thumbnailID){
+       cb(null,req.body.thumbnailID);
+     }else{
+       const hashids = new Hashids("sqdqc416c1DZD41"+Math.random()*12480,0);
+       const hex = Buffer(file.originalname).toString('hex') + Math.floor(Math.random() * 1206000);
+       const id = hashids.encodeHex(hex);
+       cb(null,id.substring(0,5)+id.substring(10,15));
+     }
+   }
+ });
+
+const upload = multer({
     storage: storage,
     fileFilter: (req,file,cb) => {
       let validationResult = validateUploadInput(req.body);
@@ -49,19 +38,39 @@ var upload = multer({
 
 router.post('/media/recentUser',(req,res)=>{
     db.getLastestUserMedia(req.body.user,5).then(data=>{
-        const dataPromiseMap = data.map(id => getMedia(id.mediaid).then(media => media));
-        Promise.all(dataPromiseMap).then(result=>{
-            res.json(result);
-        });
+      getMedias(data).then(medias => {
+        res.json(medias);
+      });
     });
 });
 router.post('/media/recentAll',(req,res)=>{
-    db.getLastestUserMedia(req.body.user).then(data=>{
-        const dataPromiseMap = data.map(id => getMedia(id.mediaid).then(media => media));
-        Promise.all(dataPromiseMap).then(result=>{
-            res.json(result);
-        });
+    db.getLastestUserMedia(req.body.user).then(data=> {
+      getMedias(data).then(medias => {
+        res.json(medias);
+      })
     });
+});
+
+router.post('/media/popularAll/',(req,res)=>{
+  db.getPopularMedia(req.body.type).then(data => {
+    getMedias(data).then(medias => {
+      res.json(medias);
+    });
+  })
+});
+router.post('/media/popularAllCat/',(req,res)=>{
+  db.getPopularMedia(req.body.type,20).then(data => {
+    getMedias(data).then(medias => {
+      res.json(medias);
+    });
+  })
+});
+router.post('/media/searchMedia/',(req,res)=>{
+  db.findByTag(req.body.type).then(data => {
+    getMedias(data).then(medias => {
+      res.json(medias);
+    });
+  })
 });
 
 router.get('/media/profile/:id',(req,res)=>{
@@ -92,7 +101,7 @@ router.post('/upload',cpUpload,(req,res)=>{
       ext: req.body.ext,
       file: req.files['file'][0]
     }
-    //db.addMedia(media);
+    db.addMedia(media);
     return res.status(200).json({success:true,message:"Upload Successful",mediaid:media.mediaid});
   }else{
     return res.json({
@@ -157,6 +166,26 @@ router.post('/media/:id/unlike',(req,res)=>{
   }
 });
 
+router.post('/media/:id/comment',(req,res)=>{
+  if(req.isAuthenticated()){
+    const comment = req.body.comment;
+    if(comment && comment.length > 512){
+      return res.json({success:false,errors:{message:"Comment must be less than 512 characters"}});;
+    }
+    const hashids = new Hashids("Newremainhadhappen"+Math.random()*12480, 16);
+    const commentid = hashids.encode(Date.now());
+    let data = {
+      mediaid: req.params.id,
+      username: req.user,
+      comment: req.body.comment,
+      commentid,
+    };
+    return db.addComment(data).then(err => {
+        return res.json({succes:true,message:"Comment posted successfully"});
+    });
+  }
+});
+
 function getMedia(mediaId,username){
   return db.getMedia(mediaId)
     .then(media => {
@@ -173,6 +202,7 @@ function getMedia(mediaId,username){
       else if(media.type === 'mu'){
         type = 'music';
       }
+      const comments = db.getComments(mediaId).then(data => Object.assign(media,{comments:data}));
       const tags = db.getTags(mediaId).then(data => Object.assign(media,{tags: data}));
       const mediaType = db.getMediaType(mediaId,type).then(data => Object.assign(media,data[0]));
       const like = db.getLike(username,mediaId).then(data => Object.assign(media,{liked: data.length != 0}));

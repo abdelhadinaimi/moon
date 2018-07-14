@@ -7,7 +7,9 @@ import ActionLike from 'material-ui/svg-icons/action/thumb-up';
 import {blue500,grey800} from 'material-ui/styles/colors';
 import { Link } from 'react-router-dom';
 import "../../node_modules/video-react/dist/video-react.css";
-
+import CommentForm from './forms/CommentForm';
+import Comments from './Comments';
+import Auth from '../modules/Auth';
 const styles = {
   img: {
     width: "100%",
@@ -17,7 +19,7 @@ const styles = {
   },
 }
 
-const MediaComponent = ({info,onLike}) => {
+const MediaComponent = ({info,onLike,onChange,onSubmit,errors}) => {
     return(
       <Card className="container">
           <h2 className="card-heading text-center">{info.title}</h2>
@@ -47,6 +49,11 @@ const MediaComponent = ({info,onLike}) => {
           <div className="field-line">
               {"Tags : " + (info.tags.length !== 0 ? info.tags.map(i=>i+" ") : "None")}
           </div>
+          <CardTitle title="Comments"/>
+          {errors && errors.message && <p className="error-message">{errors.message}</p>}
+          {Auth.isUserAuthenticated() && <CommentForm onChange={onChange} onSubmit={onSubmit} user={Auth.getToken()} comment={info.comment}/>}
+          <hr className="hr-settings"/>
+          <Comments info={info.comments}/>
       </Card>
     );
 }

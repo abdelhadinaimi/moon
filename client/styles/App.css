@@ -5,7 +5,7 @@ tbody {
 
 a {
   text-decoration: none;
-  color: white;
+  color: rgb(73, 189, 212);
 }
 
 .text-center {
@@ -37,8 +37,10 @@ a {
 }
 
 .container {
-  margin: 0 auto;
-  width: 800px;
+  margin: 0 auto 30px auto;
+  width: 80%;
+  overflow:hidden;
+
 }
 
 .card-heading {
@@ -111,4 +113,10 @@ a {
     border-left: none rgb(224, 224, 224);
     border-right: none rgb(224, 224, 224);
     border-bottom: 1px solid rgb(224, 224, 224);
+}
+.comment{
+    height: 100%;
+    width: 70%;
+    background: rgb(238, 238, 238);
+    margin-left: 115px;
 }

@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
   4- Similar Uploads (media)
 */
 
-const fetchTypes = ['popularAll','recentAll','popularUser','recentUser','similarMedia'];
+const fetchTypes = ['popularAll','recentAll','popularUser','recentUser','similarMedia','searchMedia'];
 class GridContainer extends React.Component{
 
   constructor(props){
@@ -23,7 +23,8 @@ class GridContainer extends React.Component{
 
   getTitlesData(){
     const data = {
-      user : this.props.user
+      user : this.props.user,
+      type : this.props.type,
     }
     let request = new Request('/api/media/'+this.props.fetchType,{
       method: 'POST',

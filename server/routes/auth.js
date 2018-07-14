@@ -1,14 +1,14 @@
-const express = require('express');
+  const express = require('express');
 const validator = require('validator');
 const router = new express.Router();
 const passport = require('passport');
 const localLogin = require('../passport/local-login');
 const db = require('../queries');
-
+const iv = require('../utils/validation');
 function checkUserEmail(payload){
     const errors = {};
     let success = true;
-    var promises = [
+    const promises = [
       db.getUser(payload.username)
       .then(data => {
         if(data.length !== 0){
@@ -29,9 +29,9 @@ function checkUserEmail(payload){
     });
 }
 function checkLogin(payload){
-  const message = '';
+  let message = '';
   let success = true;
-  return db.checkPass(payload.email,payload.password).then(username=>{
+  return db.checkPassEmail(payload.email,payload.password).then(username=>{
       if(!username){
         message = "Email and password do not match";
         success = false;
@@ -57,26 +57,21 @@ function validateSignupForm(payload) {
   const errors = {};
   let isFormValid = true;
 
-  if (!payload || typeof payload.email !== 'string' || !validator.isEmail(payload.email)) {
+  if (!iv.isEmail(payload.email)) {
     isFormValid = false;
     errors.email = 'Please provide a correct email address.';
   }
 
-  if (!payload || typeof payload.password !== 'string' || payload.password.trim().length < 8) {
+  if (!iv.isPassword(payload.password)) {
     isFormValid = false;
     errors.password = 'Password must have at least 8 characters.';
   }
 
-  if (!payload || typeof payload.password2 !== 'string' || payload.password2.trim() !== payload.password) {
+  if (!iv.isPassword(payload.password2) || payload.password2.trim() !== payload.password.trim()) {
     isFormValid = false;
     errors.password2 = 'Passwords must match.';
   }
-
-  if (!payload || typeof payload.username !== 'string' || payload.username.trim().length === 0) {
-    isFormValid = false;
-    errors.username = 'Please provide your username.';
-  }
-  else if(payload.username.trim().length > 16 || payload.username.trim().length < 8){
+  if(!iv.isUsername(payload.username)){
     isFormValid = false;
     errors.username = 'Username must be between 8 and 16 characters';
   }

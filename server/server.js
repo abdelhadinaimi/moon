@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
-const PORT = process.env.PORT || 5000
-
+const PORT =  3000;
 /* == initialization == */
 const app = require('./app');
 
@@ -25,7 +24,7 @@ app.get('/api/secret',(req,res)=>{
 
 app.use(express.static(path.resolve(__dirname, '..','public')));// Serve static assets
 
-app.get('*', (req, res,next) => {
+app.get('*',(req, res,next) => {
   res.sendFile(path.resolve(__dirname, '..','public','index.html')); //get the built react app
 });
 
