@@ -8,6 +8,7 @@
 * See users’ profiles and uploads
 * See the most popular uploads on the front page
 
+
 ## For Registered users
 
 * Everything that unregistered users can do
